@@ -47,9 +47,13 @@ data class Arc(
 
         val sweepAngles = intersectionPoints.map { point ->
             (point.y - center.y).atan2(point.x - center.x)
-        }.sorted().map { angle ->
-            angle - startAngle
-        } + sweepAngle
+        }.map { angleToPoint ->
+            var sweepAngleToPoint = angleToPoint - startAngle
+            while (sweepAngleToPoint < 0f) {
+                sweepAngleToPoint += PI_FLOAT_2
+            }
+            sweepAngleToPoint
+        }.sorted() + sweepAngle
 
         return sweepAngles.mapIndexedNotNull { index, sweepAngle ->
             val previousSweepAngle = if (index > 0) sweepAngles[index - 1] else 0f
@@ -59,11 +63,13 @@ data class Arc(
                 startAngle + previousSweepAngle,
                 sweepAngle - previousSweepAngle
             )
+            val floatSafeRectangle =
+                RectF(rectangle).apply { inset(PRECISION_CORRECTION, PRECISION_CORRECTION) }
             val arcMidPoint = PointF(
                 arc.center.x + arc.radius * cos(arc.startAngle + arc.sweepAngle / 2f),
                 arc.center.y + arc.radius * sin(arc.startAngle + arc.sweepAngle / 2f)
             )
-            if (rectangle.contains(arcMidPoint)) {
+            if (floatSafeRectangle.contains(arcMidPoint)) {
                 arc
             } else {
                 null
@@ -104,10 +110,6 @@ data class Arc(
             lastIntersection = intersection
         }
         return arcs
-    }
-
-    companion object {
-        val log = mutableListOf<String>()
     }
 
     private fun containedInCircle(gear: Gear): Boolean {
