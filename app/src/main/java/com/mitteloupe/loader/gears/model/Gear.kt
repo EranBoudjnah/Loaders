@@ -3,6 +3,7 @@ package com.mitteloupe.loader.gears.model
 import android.graphics.PointF
 import com.mitteloupe.loader.gears.PI_FLOAT
 import com.mitteloupe.loader.gears.PI_FLOAT_2
+import com.mitteloupe.loader.gears.numberOfTeeth
 
 data class Gear(
     override val center: PointF,
@@ -10,9 +11,10 @@ data class Gear(
     val rotation: Float,
     val isClockwise: Boolean,
     val toothWidth: Float,
+    val toothDepth: Float,
     val canBeExtended: Boolean = true
 ) : Circular {
-    val teethCount = (radius * 2f / toothWidth).toInt()
+    val teethCount = numberOfTeeth(toothWidth, radius, toothDepth)
     val relativeSpeed = if (isClockwise) {
         1f / teethCount
     } else {
@@ -25,6 +27,7 @@ data class Gear(
             radius = radius + outerRadius,
             rotation = rotation,
             toothWidth = toothWidth,
+            toothDepth = toothDepth,
             isClockwise = isClockwise
         )
 

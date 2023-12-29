@@ -4,13 +4,14 @@ import android.graphics.PointF
 import android.graphics.RectF
 import com.mitteloupe.loader.gears.model.Arc
 import com.mitteloupe.loader.gears.model.Gear
-import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.round
 import kotlin.math.sin
 import kotlin.random.Random
 
-class RectangleFiller {
+class RectangleFiller(
+    private val gearMesher: GearMesher
+) {
     private val intersectionRect = RectF()
 
     fun fill(
@@ -21,7 +22,13 @@ class RectangleFiller {
         toothWidth: Float
     ): List<Gear> {
         val gears = mutableListOf(
-            initialCircle(rectangle, minimumRadius, maximumRadius, toothWidth)
+            initialGear(
+                rectangle = rectangle,
+                minimumGearRadius = minimumRadius,
+                maximumGearRadius = maximumRadius,
+                toothWidth = toothWidth,
+                toothDepth = toothDepth
+            )
         )
 
         var index = 0
@@ -39,8 +46,7 @@ class RectangleFiller {
                         minimumRadius = minimumRadius,
                         maximumRadius = maximumRadius,
                         toothDepth = toothDepth,
-                        toothWidth = toothWidth,
-                        relativePosition = 0f
+                        toothWidth = toothWidth
                     )
             }
 
@@ -70,13 +76,7 @@ class RectangleFiller {
             filter { currentGear ->
                 currentGear != originGear
             }.fold(arcsInRect) { arcs, currentGear ->
-                val validGear = currentGear.outerRadius(
-                    if (currentGear.isClockwise != originGear.isClockwise) {
-                        nextRadius + toothDepth
-                    } else {
-                        nextRadius - toothDepth
-                    }
-                )
+                val validGear = currentGear.outerRadius(nextRadius + 1.5f)
                 arcs.flatMap { currentArc ->
                     currentArc.subtractGear(validGear)
                 }
@@ -91,8 +91,13 @@ class RectangleFiller {
                 Gear(
                     center = newCenter,
                     radius = nextRadius,
-                    rotation = meshingAngle(originGear, newCenter, nextRadius, toothWidth),
+                    rotation = gearMesher.meshingAngle(
+                        firstGear = originGear,
+                        newGearCenter = newCenter,
+                        newGearRadius = nextRadius
+                    ),
                     toothWidth = toothWidth,
+                    toothDepth = toothDepth,
                     isClockwise = !originGear.isClockwise
                 )
             )
@@ -121,25 +126,29 @@ class RectangleFiller {
         return remainingNextPoints.any { it.length >= 1f }
     }
 
-    private fun initialCircle(
+    private fun initialGear(
         rectangle: RectF,
         minimumGearRadius: Float,
         maximumGearRadius: Float,
-        toothWidth: Float
-    ) = Gear(
-        center = PointF(
-            rectangle.centerX(),
-            rectangle.centerY()
-        ),
-        radius = randomGearSize(
-            minimumRadius = minimumGearRadius,
-            maximumRadius = maximumGearRadius,
-            toothWidth = toothWidth
-        ),
-        rotation = 0f,
-        toothWidth = toothWidth,
-        isClockwise = true
-    )
+        toothWidth: Float,
+        toothDepth: Float
+    ): Gear = randomGearSize(
+        minimumRadius = minimumGearRadius,
+        maximumRadius = maximumGearRadius,
+        toothWidth = toothWidth
+    ).let { radius ->
+        Gear(
+            center = PointF(
+                rectangle.centerX(),
+                rectangle.centerY()
+            ),
+            radius = radius,
+            rotation = 0f,
+            toothWidth = toothWidth,
+            toothDepth = toothDepth,
+            isClockwise = true
+        )
+    }
 
     private fun pointOnArcs(
         arcs: List<Arc>,
@@ -190,30 +199,5 @@ class RectangleFiller {
             radius -= toothWidth
         }
         return radius
-    }
-
-    private fun meshingAngle(
-        firstGear: Gear,
-        newGearCenter: PointF,
-        newGearRadius: Float,
-        toothWidth: Float
-    ): Float {
-        val newGearToothCount = (newGearRadius * 2f / toothWidth).toInt()
-        val teethRatio = firstGear.teethCount.toFloat() / newGearToothCount.toFloat()
-        val newToothSweep = (360f / newGearToothCount.toFloat()).radians
-        var newRotation = if (newGearToothCount % 2f == 0f) {
-            newToothSweep / 2f
-        } else {
-            0f
-        }
-
-        newRotation += firstGear.rotation * teethRatio
-
-        val angleBetweenCogs = atan2(
-            newGearCenter.y - firstGear.center.y,
-            newGearCenter.x - firstGear.center.x
-        ) + PI_FLOAT
-
-        return newRotation + angleBetweenCogs * teethRatio
     }
 }

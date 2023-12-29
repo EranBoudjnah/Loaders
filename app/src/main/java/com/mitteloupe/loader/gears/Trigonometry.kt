@@ -2,6 +2,7 @@ package com.mitteloupe.loader.gears
 
 import android.graphics.PointF
 import kotlin.math.PI
+import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.hypot
 import kotlin.math.sqrt
@@ -24,3 +25,6 @@ fun distance(point1: PointF, point2: PointF): Float =
 
 fun distance(x1: Float, y1: Float, x2: Float, y2: Float): Float =
     hypot(x2 - x1, y2 - y1)
+
+fun numberOfTeeth(toothWidth: Float, outerRadius: Float, toothDepth: Float): Int =
+    (PI_FLOAT / asin(toothWidth / (2f * (outerRadius - toothDepth)))).toInt()
