@@ -68,10 +68,9 @@ class RectangleFiller(
         updateIntersectionRectForRadius(rectangle, nextRadius)
         if (intersectionRect.isEmpty) return false
 
-        val distanceToNewGear = nextRadius
-        val arcsInRect = originGear.outerArc(distanceToNewGear)
+        val arcsInRect = originGear.outerArc(nextRadius)
             .intersectionWithRectangle(intersectionRect)
-        val validNextPoints = validArcs(originGear, arcsInRect, distanceToNewGear)
+        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius)
 
         if (validNextPoints.isEmpty()) {
             if (nextRadius > minimumRadius) {
@@ -125,8 +124,7 @@ class RectangleFiller(
             originGear,
             rectangle,
             minimumRadius,
-            arcsInRect,
-            distanceToNewGear
+            arcsInRect
         )
     }
 
@@ -134,15 +132,14 @@ class RectangleFiller(
         originGear: Gear,
         rectangle: RectF,
         minimumRadius: Float,
-        arcsInRect: List<Arc>,
-        distanceToNewGear: Float
+        arcsInRect: List<Arc>
     ): Boolean {
         updateIntersectionRectForRadius(rectangle, minimumRadius)
         if (intersectionRect.isEmpty) return false
         val remainingNextPoints = if (size == 1) {
             arcsInRect
         } else {
-            validArcs(originGear, arcsInRect, distanceToNewGear)
+            validArcs(originGear, arcsInRect, minimumRadius)
         }
         return remainingNextPoints.any { it.length >= .1f }
     }
