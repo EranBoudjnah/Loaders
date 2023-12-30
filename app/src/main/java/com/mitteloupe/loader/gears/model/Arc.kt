@@ -2,9 +2,9 @@ package com.mitteloupe.loader.gears.model
 
 import android.graphics.PointF
 import android.graphics.RectF
-import com.mitteloupe.loader.gears.PI_FLOAT_2
-import com.mitteloupe.loader.gears.atan2
-import com.mitteloupe.loader.gears.distance
+import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
+import com.mitteloupe.loader.gears.mechanism.atan2
+import com.mitteloupe.loader.gears.mechanism.distance
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos

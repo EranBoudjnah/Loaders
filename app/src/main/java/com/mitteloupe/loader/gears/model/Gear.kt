@@ -1,9 +1,9 @@
 package com.mitteloupe.loader.gears.model
 
 import android.graphics.PointF
-import com.mitteloupe.loader.gears.PI_FLOAT
-import com.mitteloupe.loader.gears.PI_FLOAT_2
-import com.mitteloupe.loader.gears.numberOfTeeth
+import com.mitteloupe.loader.gears.mechanism.PI_FLOAT
+import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
+import com.mitteloupe.loader.gears.mechanism.numberOfTeeth
 
 data class Gear(
     override val center: PointF,

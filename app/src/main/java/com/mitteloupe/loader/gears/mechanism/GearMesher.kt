@@ -1,4 +1,4 @@
-package com.mitteloupe.loader.gears
+package com.mitteloupe.loader.gears.mechanism
 
 import android.graphics.PointF
 import com.mitteloupe.loader.gears.model.Gear
@@ -17,7 +17,7 @@ class GearMesher {
         )
         val teethRatio = firstGear.teethCount.toFloat() / newGearTeethCount.toFloat()
 
-        val angleBetweenCogs = atan2(
+        val angleBetweenGears = atan2(
             newGearCenter.y - firstGear.center.y,
             newGearCenter.x - firstGear.center.x
         ) + PI_FLOAT_HALF
@@ -28,7 +28,7 @@ class GearMesher {
             0f
         }
 
-        return angleBetweenCogs * (teethRatio + 1) - firstGear.rotation * teethRatio +
+        return angleBetweenGears * (teethRatio + 1) - firstGear.rotation * teethRatio +
             evenNewGearTeethCountOffset
     }
 }

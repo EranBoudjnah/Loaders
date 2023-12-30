@@ -1,4 +1,4 @@
-package com.mitteloupe.loader.gears
+package com.mitteloupe.loader.gears.mechanism
 
 import android.graphics.PointF
 import com.mitteloupe.android.mockPointF
@@ -96,12 +96,12 @@ class GearMesherTest(
             testCase(
                 testCaseTitle = "Given same size gear with even tooth number below returns 18 degrees",
                 firstGearCenterX = 0f,
-                firstGearCenterY = 0f,
+                firstGearCenterY = 10f,
                 firstGearRadius = 100f,
                 firstGearRotation = 0f,
                 firstGearIsClockwise = false,
                 newGearCenterX = 0f,
-                newGearCenterY = 200f,
+                newGearCenterY = 210f,
                 newGearRadius = 100f,
                 toothWidth = 58.71322f,
                 toothDepth = 5f,
@@ -109,12 +109,12 @@ class GearMesherTest(
             ),
             testCase(
                 testCaseTitle = "Given rotated 90, half size gear with odd tooth number below returns 0 degrees",
-                firstGearCenterX = 0f,
+                firstGearCenterX = 10f,
                 firstGearCenterY = 0f,
                 firstGearRadius = 100f,
                 firstGearRotation = PI_FLOAT_HALF,
                 firstGearIsClockwise = false,
-                newGearCenterX = 0f,
+                newGearCenterX = 10f,
                 newGearCenterY = 155f,
                 newGearRadius = 55f,
                 toothWidth = 58.71322f,
