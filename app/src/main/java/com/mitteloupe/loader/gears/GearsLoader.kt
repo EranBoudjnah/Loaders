@@ -39,7 +39,7 @@ fun GearsLoader(
     toothDepth: Dp = 3f.dp,
     toothWidth: Dp = 4f.dp,
     toothRoundness: Dp = 1f.dp,
-    velocity: Float = 10f,
+    velocity: Float = 1f,
     gearColor: Brush = SolidColor(Color.Gray)
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
@@ -81,7 +81,7 @@ fun GearsLoader(
         while (true) {
             val newRotation =
                 (Instant.now()
-                    .toEpochMilli() - startTime).toFloat() / 10000f * PI_FLOAT_2 * velocity
+                    .toEpochMilli() - startTime).toFloat() / 1000f * PI_FLOAT_2 * velocity
             if (newRotation != rotation) {
                 rotation = newRotation
             }
