@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.composable.Gear
 import com.mitteloupe.loader.gears.mechanism.GearMesher
+import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
 import com.mitteloupe.loader.gears.mechanism.RectangleFiller
 import java.time.Instant
 import kotlinx.coroutines.delay
@@ -38,6 +39,7 @@ fun GearsLoader(
     toothDepth: Dp = 3f.dp,
     toothWidth: Dp = 4f.dp,
     toothRoundness: Dp = 1f.dp,
+    velocity: Float = 10f,
     gearColor: Brush = SolidColor(Color.Gray)
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
@@ -72,15 +74,18 @@ fun GearsLoader(
     }
 
     var rotation by remember {
-        mutableFloatStateOf(
-            (Instant.now().toEpochMilli() - startTime).toFloat() / 250f
-        )
+        mutableFloatStateOf(0f)
     }
 
     LaunchedEffect(Unit) {
         while (true) {
-            rotation = (Instant.now().toEpochMilli() - startTime).toFloat() / 250f
-            delay(20)
+            val newRotation =
+                (Instant.now()
+                    .toEpochMilli() - startTime).toFloat() / 10000f * PI_FLOAT_2 * velocity
+            if (newRotation != rotation) {
+                rotation = newRotation
+            }
+            delay(10)
         }
     }
 
