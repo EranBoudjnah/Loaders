@@ -36,7 +36,7 @@ internal fun Gear(
     val toothAngle = (360f / numberOfTeeth).radians
     val halfToothAngle = toothAngle / 2f
     val quarterToothAngle = toothAngle / 4f
-    val relativeRotation = gear.rotation - PI_FLOAT_HALF - rotation * gear.relativeSpeed
+    var relativeRotation = gear.rotation - PI_FLOAT_HALF - rotation * gear.relativeSpeed
 
     Canvas(
         modifier = Modifier
@@ -53,14 +53,12 @@ internal fun Gear(
                     (0 until numberOfTeeth).forEach { toothIndex ->
                         val startAngle =
                             (toothIndex.toFloat() * .999999f * toothAngle) + relativeRotation
-                        val endAngle = startAngle + toothAngle
 
                         drawSharpTooth(
                             toothIndex,
                             gearCenterX,
                             gearCenterY,
                             startAngle,
-                            endAngle,
                             halfToothAngle,
                             innerRadius,
                             outerRadius
@@ -69,6 +67,7 @@ internal fun Gear(
                 }
 
                 GearType.Square -> {
+                    relativeRotation += quarterToothAngle
                     (0 until numberOfTeeth).forEach { toothIndex ->
                         val startAngle =
                             (toothIndex.toFloat() * .999999f * toothAngle) + relativeRotation
@@ -125,7 +124,6 @@ private fun Path.drawSharpTooth(
     gearCenterX: Float,
     gearCenterY: Float,
     startAngle: Float,
-    endAngle: Float,
     halfToothAngle: Float,
     innerRadius: Float,
     outerRadius: Float
@@ -147,10 +145,6 @@ private fun Path.drawSharpTooth(
         gearCenterX + cos(midAngle) * innerRadius,
         gearCenterY + sin(midAngle) * innerRadius
     )
-    lineTo(
-        gearCenterX + cos(endAngle) * outerRadius,
-        gearCenterY + sin(endAngle) * outerRadius
-    )
 }
 
 private fun Path.drawSquareTooth(
@@ -166,7 +160,7 @@ private fun Path.drawSquareTooth(
     toothDepth: Float
 ) {
     val toothRadius = outerRadius - innerRadius
-    val gearRadius = innerRadius + toothDepth / 8f
+    val gearRadius = innerRadius //+ toothDepth / 8f
     if (toothIndex == 0) {
         moveTo(
             gearCenterX + cos(startAngle) * gearRadius,
@@ -178,28 +172,20 @@ private fun Path.drawSquareTooth(
             gearCenterY + sin(startAngle) * gearRadius
         )
     }
+    val toothBaseX = cos(startAngle + halfToothAngle) * gearRadius
+    val toothBaseY = sin(startAngle + halfToothAngle)
     lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle) * gearRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle) * gearRadius
+        gearCenterX + toothBaseX,
+        gearCenterY + toothBaseY * gearRadius
+    )
+    val toothEndX = cos(startAngle + halfToothAngle + quarterToothAngle) * toothRadius
+    val toothEndY = sin(startAngle + halfToothAngle + quarterToothAngle) * toothRadius
+    lineTo(
+        gearCenterX + toothBaseX + toothEndX,
+        gearCenterY + toothBaseY * gearRadius + toothEndY
     )
     lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle) * gearRadius +
-            cos(startAngle + halfToothAngle) * toothRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle) * gearRadius +
-            sin(startAngle + halfToothAngle) * toothRadius
-    )
-    lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * gearRadius +
-            cos(startAngle + halfToothAngle) * toothRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * gearRadius +
-            sin(startAngle + halfToothAngle) * toothRadius
-    )
-    lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * gearRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * gearRadius
-    )
-    lineTo(
-        gearCenterX + cos(endAngle) * gearRadius,
-        gearCenterY + sin(endAngle) * gearRadius
+        gearCenterX + cos(endAngle) * gearRadius + toothEndX,
+        gearCenterY + sin(endAngle) * gearRadius + toothEndY
     )
 }

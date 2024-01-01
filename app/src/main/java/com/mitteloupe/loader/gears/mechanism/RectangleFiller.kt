@@ -5,6 +5,7 @@ import android.graphics.RectF
 import com.mitteloupe.loader.gears.model.Arc
 import com.mitteloupe.loader.gears.model.Gear
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.round
 import kotlin.math.sin
 import kotlin.random.Random
@@ -68,9 +69,9 @@ class RectangleFiller(
         updateIntersectionRectForRadius(rectangle, nextRadius)
         if (intersectionRect.isEmpty) return false
 
-        val arcsInRect = originGear.outerArc(nextRadius)
+        val arcsInRect = originGear.outerArc(nextRadius - toothDepth * .8f)
             .intersectionWithRectangle(intersectionRect)
-        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius + toothDepth / 2f)
+        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius + toothDepth * 1.2f)
 
         if (validNextPoints.isEmpty()) {
             if (nextRadius > minimumRadius) {
@@ -82,7 +83,7 @@ class RectangleFiller(
                     toothWidth = toothWidth,
                     toothDepth = toothDepth,
                     relativePosition = relativePosition,
-                    nextRadius = minimumRadius
+                    nextRadius = max(minimumRadius, nextRadius - toothWidth)
                 )
             }
             return false
@@ -113,7 +114,7 @@ class RectangleFiller(
                     toothWidth = toothWidth,
                     toothDepth = toothDepth,
                     relativePosition = relativePosition,
-                    nextRadius = minimumRadius
+                    nextRadius = max(minimumRadius, nextRadius - toothWidth)
                 )
             }
 
