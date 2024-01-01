@@ -165,37 +165,41 @@ private fun Path.drawSquareTooth(
     outerRadius: Float,
     toothDepth: Float
 ) {
-    val outerRadius = outerRadius + toothDepth / 8f
-    val innerRadius = innerRadius + toothDepth / 8f
+    val toothRadius = outerRadius - innerRadius
+    val gearRadius = innerRadius + toothDepth / 8f
     if (toothIndex == 0) {
         moveTo(
-            gearCenterX + cos(startAngle) * innerRadius,
-            gearCenterY + sin(startAngle) * innerRadius
+            gearCenterX + cos(startAngle) * gearRadius,
+            gearCenterY + sin(startAngle) * gearRadius
         )
     } else {
         lineTo(
-            gearCenterX + cos(startAngle) * innerRadius,
-            gearCenterY + sin(startAngle) * innerRadius
+            gearCenterX + cos(startAngle) * gearRadius,
+            gearCenterY + sin(startAngle) * gearRadius
         )
     }
     lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle) * innerRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle) * innerRadius
+        gearCenterX + cos(startAngle + quarterToothAngle) * gearRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle) * gearRadius
     )
     lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle) * outerRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle) * outerRadius
+        gearCenterX + cos(startAngle + quarterToothAngle) * gearRadius +
+            cos(startAngle + halfToothAngle) * toothRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle) * gearRadius +
+            sin(startAngle + halfToothAngle) * toothRadius
     )
     lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * outerRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * outerRadius
+        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * gearRadius +
+            cos(startAngle + halfToothAngle) * toothRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * gearRadius +
+            sin(startAngle + halfToothAngle) * toothRadius
     )
     lineTo(
-        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * innerRadius,
-        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * innerRadius
+        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * gearRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * gearRadius
     )
     lineTo(
-        gearCenterX + cos(endAngle) * innerRadius,
-        gearCenterY + sin(endAngle) * innerRadius
+        gearCenterX + cos(endAngle) * gearRadius,
+        gearCenterY + sin(endAngle) * gearRadius
     )
 }
