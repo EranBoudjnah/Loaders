@@ -7,8 +7,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -20,10 +22,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.mitteloupe.loader.compose.rememberMutableStateListOf
 import com.mitteloupe.loader.gears.composable.Gear
 import com.mitteloupe.loader.gears.mechanism.GearMesher
 import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
 import com.mitteloupe.loader.gears.mechanism.RectangleFiller
+import com.mitteloupe.loader.gears.model.Gear
 import com.mitteloupe.loader.gears.model.GearType
 import java.time.Instant
 import kotlinx.coroutines.delay
@@ -45,32 +49,38 @@ fun GearsLoader(
     gearType: GearType = GearType.Sharp
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
+    var usedSize by remember { mutableStateOf(IntSize.Zero) }
 
     val currentLocalDensity = LocalDensity.current
 
-    val gears by remember {
+    val savedGears = rememberMutableStateListOf<Gear>()
+    val gears by remember(size) {
         derivedStateOf {
             with(currentLocalDensity) {
-                if (size.width == 0 || size.height == 0) {
-                    emptyList()
-                } else {
-                    RectangleFiller(GearMesher()).fill(
-                        rectangle = RectF(
-                            0f,
-                            0f,
-                            size.width.toDp().value,
-                            size.height.toDp().value
-                        ).apply {
-                            if (overflow) {
-                                inset(-maximumRadius.value, -maximumRadius.value)
-                            }
-                        },
-                        minimumRadius = minimumRadius.value,
-                        maximumRadius = maximumRadius.value,
-                        toothDepth = toothDepth.value,
-                        toothWidth = toothWidth.value
-                    ).sortedBy { it.center.y }
+                if (size != usedSize) {
+                    usedSize = size
+                    if (size.width != 0 && size.height != 0) {
+                        savedGears.clear()
+                        savedGears.addAll(RectangleFiller(GearMesher()).fill(
+                            rectangle = RectF(
+                                0f,
+                                0f,
+                                size.width.toDp().value,
+                                size.height.toDp().value
+                            ).apply {
+                                if (overflow) {
+                                    inset(-maximumRadius.value, -maximumRadius.value)
+                                }
+                            },
+                            minimumRadius = minimumRadius.value,
+                            maximumRadius = maximumRadius.value,
+                            toothDepth = toothDepth.value,
+                            toothWidth = toothWidth.value
+                        ).sortedBy { it.center.y }
+                        )
+                    }
                 }
+                savedGears
             }
         }
     }

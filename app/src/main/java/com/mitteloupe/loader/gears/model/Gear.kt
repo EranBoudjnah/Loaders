@@ -1,10 +1,13 @@
 package com.mitteloupe.loader.gears.model
 
 import android.graphics.PointF
+import android.os.Parcelable
 import com.mitteloupe.loader.gears.mechanism.PI_FLOAT
 import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
 import com.mitteloupe.loader.gears.mechanism.numberOfTeeth
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Gear(
     override val center: PointF,
     override val radius: Float,
@@ -13,7 +16,7 @@ data class Gear(
     val toothWidth: Float,
     val toothDepth: Float,
     val canBeExtended: Boolean = true
-) : Circular {
+) : Circular, Parcelable {
     val teethCount = numberOfTeeth(toothWidth, radius, toothDepth)
     val relativeSpeed = if (isClockwise) {
         1f / teethCount
