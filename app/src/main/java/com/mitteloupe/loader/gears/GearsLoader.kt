@@ -24,6 +24,7 @@ import com.mitteloupe.loader.gears.composable.Gear
 import com.mitteloupe.loader.gears.mechanism.GearMesher
 import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
 import com.mitteloupe.loader.gears.mechanism.RectangleFiller
+import com.mitteloupe.loader.gears.model.GearType
 import java.time.Instant
 import kotlinx.coroutines.delay
 
@@ -40,7 +41,8 @@ fun GearsLoader(
     toothWidth: Dp = 4f.dp,
     toothRoundness: Dp = 1f.dp,
     velocity: Float = 1f,
-    gearColor: Brush = SolidColor(Color.Gray)
+    gearColor: Brush = SolidColor(Color.Gray),
+    gearType: GearType = GearType.Sharp
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
 
@@ -103,7 +105,8 @@ fun GearsLoader(
                 rotation = rotation,
                 toothRoundness = toothRoundness,
                 holeRadius = holeRadius,
-                brush = gearColor
+                brush = gearColor,
+                gearType = gearType
             )
         }
     }

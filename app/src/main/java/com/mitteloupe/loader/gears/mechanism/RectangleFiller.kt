@@ -70,7 +70,7 @@ class RectangleFiller(
 
         val arcsInRect = originGear.outerArc(nextRadius)
             .intersectionWithRectangle(intersectionRect)
-        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius)
+        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius + toothDepth / 2f)
 
         if (validNextPoints.isEmpty()) {
             if (nextRadius > minimumRadius) {

@@ -7,10 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ClipOp
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -20,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_HALF
 import com.mitteloupe.loader.gears.mechanism.radians
 import com.mitteloupe.loader.gears.model.Gear
+import com.mitteloupe.loader.gears.model.GearType
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -30,11 +29,13 @@ internal fun Gear(
     rotation: Float,
     toothRoundness: Dp,
     holeRadius: Dp,
-    brush: Brush = SolidColor(Color.Red)
+    gearType: GearType,
+    brush: Brush
 ) {
     val numberOfTeeth = gear.teethCount
     val toothAngle = (360f / numberOfTeeth).radians
     val halfToothAngle = toothAngle / 2f
+    val quarterToothAngle = toothAngle / 4f
     val relativeRotation = gear.rotation - PI_FLOAT_HALF - rotation * gear.relativeSpeed
 
     Canvas(
@@ -44,33 +45,49 @@ internal fun Gear(
         val gearCenterX = gear.center.x.dp.toPx()
         val gearCenterY = gear.center.y.dp.toPx()
         val outerRadius = gear.radius.dp.toPx()
-        val innerRadius = outerRadius - toothDepth.toPx()
+        val toothDepthPx = toothDepth.toPx()
+        val innerRadius = outerRadius - toothDepthPx
         val path = Path().apply {
-            (0 until numberOfTeeth).forEach { toothIndex ->
-                val startAngle =
-                    (toothIndex.toFloat() * .999999f * toothAngle) + relativeRotation
-                val endAngle = startAngle + toothAngle
-                val midAngle = startAngle + halfToothAngle
+            when (gearType) {
+                GearType.Sharp -> {
+                    (0 until numberOfTeeth).forEach { toothIndex ->
+                        val startAngle =
+                            (toothIndex.toFloat() * .999999f * toothAngle) + relativeRotation
+                        val endAngle = startAngle + toothAngle
 
-                if (toothIndex == 0) {
-                    moveTo(
-                        gearCenterX + cos(startAngle) * outerRadius,
-                        gearCenterY + sin(startAngle) * outerRadius
-                    )
-                } else {
-                    lineTo(
-                        gearCenterX + cos(startAngle) * outerRadius,
-                        gearCenterY + sin(startAngle) * outerRadius
-                    )
+                        drawSharpTooth(
+                            toothIndex,
+                            gearCenterX,
+                            gearCenterY,
+                            startAngle,
+                            endAngle,
+                            halfToothAngle,
+                            innerRadius,
+                            outerRadius
+                        )
+                    }
                 }
-                lineTo(
-                    gearCenterX + cos(midAngle) * innerRadius,
-                    gearCenterY + sin(midAngle) * innerRadius
-                )
-                lineTo(
-                    gearCenterX + cos(endAngle) * outerRadius,
-                    gearCenterY + sin(endAngle) * outerRadius
-                )
+
+                GearType.Square -> {
+                    (0 until numberOfTeeth).forEach { toothIndex ->
+                        val startAngle =
+                            (toothIndex.toFloat() * .999999f * toothAngle) + relativeRotation
+                        val endAngle = startAngle + toothAngle
+
+                        drawSquareTooth(
+                            toothIndex,
+                            gearCenterX,
+                            gearCenterY,
+                            startAngle,
+                            endAngle,
+                            quarterToothAngle,
+                            halfToothAngle,
+                            innerRadius,
+                            outerRadius,
+                            toothDepthPx
+                        )
+                    }
+                }
             }
 
             close()
@@ -101,4 +118,84 @@ internal fun Gear(
         }
 
     }
+}
+
+private fun Path.drawSharpTooth(
+    toothIndex: Int,
+    gearCenterX: Float,
+    gearCenterY: Float,
+    startAngle: Float,
+    endAngle: Float,
+    halfToothAngle: Float,
+    innerRadius: Float,
+    outerRadius: Float
+) {
+    val midAngle = startAngle + halfToothAngle
+
+    if (toothIndex == 0) {
+        moveTo(
+            gearCenterX + cos(startAngle) * outerRadius,
+            gearCenterY + sin(startAngle) * outerRadius
+        )
+    } else {
+        lineTo(
+            gearCenterX + cos(startAngle) * outerRadius,
+            gearCenterY + sin(startAngle) * outerRadius
+        )
+    }
+    lineTo(
+        gearCenterX + cos(midAngle) * innerRadius,
+        gearCenterY + sin(midAngle) * innerRadius
+    )
+    lineTo(
+        gearCenterX + cos(endAngle) * outerRadius,
+        gearCenterY + sin(endAngle) * outerRadius
+    )
+}
+
+private fun Path.drawSquareTooth(
+    toothIndex: Int,
+    gearCenterX: Float,
+    gearCenterY: Float,
+    startAngle: Float,
+    endAngle: Float,
+    quarterToothAngle: Float,
+    halfToothAngle: Float,
+    innerRadius: Float,
+    outerRadius: Float,
+    toothDepth: Float
+) {
+    val outerRadius = outerRadius + toothDepth / 8f
+    val innerRadius = innerRadius + toothDepth / 8f
+    if (toothIndex == 0) {
+        moveTo(
+            gearCenterX + cos(startAngle) * innerRadius,
+            gearCenterY + sin(startAngle) * innerRadius
+        )
+    } else {
+        lineTo(
+            gearCenterX + cos(startAngle) * innerRadius,
+            gearCenterY + sin(startAngle) * innerRadius
+        )
+    }
+    lineTo(
+        gearCenterX + cos(startAngle + quarterToothAngle) * innerRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle) * innerRadius
+    )
+    lineTo(
+        gearCenterX + cos(startAngle + quarterToothAngle) * outerRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle) * outerRadius
+    )
+    lineTo(
+        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * outerRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * outerRadius
+    )
+    lineTo(
+        gearCenterX + cos(startAngle + quarterToothAngle + halfToothAngle) * innerRadius,
+        gearCenterY + sin(startAngle + quarterToothAngle + halfToothAngle) * innerRadius
+    )
+    lineTo(
+        gearCenterX + cos(endAngle) * innerRadius,
+        gearCenterY + sin(endAngle) * innerRadius
+    )
 }
