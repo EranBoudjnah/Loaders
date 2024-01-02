@@ -3,46 +3,185 @@ package com.mitteloupe.loader
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.GearsLoader
+import com.mitteloupe.loader.gears.model.GearConfiguration
+import com.mitteloupe.loader.gears.model.GearType
 import com.mitteloupe.loader.ui.theme.LoadersTheme
+import kotlin.math.max
+import kotlin.math.min
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             LoadersTheme {
-                Box(
+                val progress = remember { mutableIntStateOf(75) }
+                val tolerance = remember { mutableIntStateOf(10) }
+                val minimumRadius = remember { mutableFloatStateOf(13f) }
+                val maximumRadius = remember { mutableFloatStateOf(32f) }
+                val gearType = remember { mutableStateOf<GearType>(GearType.Square) }
+                val scrollState = rememberScrollState()
+                Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .fillMaxWidth()
                 ) {
                     GearsLoader(
-                        overflow = true,
+                        gearConfiguration = GearConfiguration(
+                            overflow = false,
+                            minimumRadius = minimumRadius.floatValue.dp,
+                            maximumRadius = maximumRadius.floatValue.dp,
+                            toothDepth = 4f.dp,
+                            toothWidth = 6f.dp,
+                            toothRoundness = 1f.dp
+                        ),
                         holeRadius = 4f.dp,
-                        toothDepth = 6f.dp,
-                        toothWidth = 6f.dp,
-                        toothRoundness = 3f.dp,
+                        gearColor = SolidColor(Color(94, 194, 194, 255)),
+                        gearType = gearType.value,
+                        progressState = ProgressState.Progress(
+                            progress.intValue,
+                            tolerance = tolerance.intValue
+                        ),
                         modifier = Modifier
                             .width(350.dp)
                             .height(200.dp)
-                            .align(Alignment.Center)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Color.Black)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                    ControlPanel(
+                        minimumRadius = minimumRadius,
+                        maximumRadius = maximumRadius,
+                        progress = progress,
+                        tolerance = tolerance,
+                        gearType = gearType
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ControlPanel(
+    minimumRadius: MutableState<Float>,
+    maximumRadius: MutableState<Float>,
+    progress: MutableState<Int>,
+    tolerance: MutableState<Int>,
+    gearType: MutableState<GearType>
+) {
+    Column(
+        modifier = Modifier
+    ) {
+        SliderWithTitle(
+            text = "Progress",
+            value = progress.value.toFloat() / 100f,
+            onValueChange = { progress.value = (it * 100f).toInt() },
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        SliderWithTitle(
+            text = "Progress tolerance",
+            value = tolerance.value.toFloat() / 50f,
+            onValueChange = { tolerance.value = (it * 50f).toInt() },
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        Row(
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        ) {
+            SliderWithTitle(
+                text = "Minimum size",
+                value = (minimumRadius.value - 12f) / 48f,
+                onValueChange = {
+                    minimumRadius.value = min(12f + it * 48f, maximumRadius.value)
+                },
+                modifier = Modifier.fillMaxWidth(.5f)
+            )
+            SliderWithTitle(
+                text = "Maximum size",
+                value = (maximumRadius.value - 12f) / 48f,
+                onValueChange = {
+                    maximumRadius.value = max(minimumRadius.value, it * 48f + 12f)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        TwoValueSelector("Square" to GearType.Square, "Sharp" to GearType.Sharp, gearType)
+    }
+}
+
+@Composable
+private fun SliderWithTitle(
+    text: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(8.dp, 0.dp)
+        )
+        Slider(
+            value = value,
+            onValueChange = onValueChange
+        )
+    }
+}
+
+@Composable
+fun <T> TwoValueSelector(
+    option1: Pair<String, T>,
+    option2: Pair<String, T>,
+    selectedOption: MutableState<T>
+) {
+    Column {
+        Row {
+            RadioButton(
+                selected = selectedOption.value == option1.second,
+                onClick = { selectedOption.value = option1.second }
+            )
+            Text(
+                text = option1.first,
+                modifier = Modifier.padding(0.dp, 12.dp)
+            )
+        }
+        Row {
+            RadioButton(
+                selected = selectedOption.value == option2.second,
+                onClick = { selectedOption.value = option2.second }
+            )
+            Text(
+                text = option2.first,
+                modifier = Modifier.padding(0.dp, 12.dp)
+            )
         }
     }
 }
@@ -51,22 +190,33 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Preview() {
     LoadersTheme {
-        Box(
+        val progress by remember { mutableFloatStateOf(0.75f) }
+        val tolerance by remember { mutableIntStateOf(10) }
+        val minimumRadius by remember { mutableFloatStateOf(12f) }
+        val maximumRadius by remember { mutableFloatStateOf(20f) }
+        Column(
             modifier = Modifier
-                .fillMaxSize()
         ) {
             GearsLoader(
-                overflow = false,
+                gearConfiguration = GearConfiguration(
+                    overflow = false,
+                    minimumRadius = minimumRadius.dp,
+                    maximumRadius = maximumRadius.dp,
+                    toothDepth = 4f.dp,
+                    toothWidth = 6f.dp,
+                    toothRoundness = 1f.dp
+                ),
                 holeRadius = 4f.dp,
-                toothDepth = 6f.dp,
-                toothWidth = 6f.dp,
-                toothRoundness = 3f.dp,
+                gearColor = SolidColor(Color(94, 194, 194, 255)),
+                gearType = GearType.Square,
+                progressState = ProgressState.Progress(
+                    (progress * 100f).toInt(),
+                    tolerance = tolerance
+                ),
                 modifier = Modifier
                     .width(350.dp)
                     .height(200.dp)
-                    .align(Alignment.Center)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.Black)
+                    .align(Alignment.CenterHorizontally)
             )
         }
     }
