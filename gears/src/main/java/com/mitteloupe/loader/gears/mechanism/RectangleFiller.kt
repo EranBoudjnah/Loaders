@@ -11,7 +11,8 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 class RectangleFiller(
-    private val gearMesher: GearMesher
+    private val gearMesher: GearMesher,
+    private val randomFloatGenerator: () -> Float = { Random.nextFloat() }
 ) {
     private val intersectionRect = RectF()
 
@@ -63,7 +64,7 @@ class RectangleFiller(
         maximumRadius: Float,
         toothWidth: Float,
         toothDepth: Float,
-        relativePosition: Float = Random.nextFloat(),
+        relativePosition: Float = randomFloatGenerator(),
         nextRadius: Float = randomGearSize(minimumRadius, maximumRadius, toothWidth)
     ): Boolean {
         updateIntersectionRectForRadius(rectangle, nextRadius)
@@ -189,7 +190,7 @@ class RectangleFiller(
 
     private fun pointOnArcs(
         arcs: List<Arc>,
-        relativePosition: Float = Random.nextFloat()
+        relativePosition: Float = randomFloatGenerator()
     ): PointF? {
         val totalArcsLength = arcs.sumOf { arc ->
             arc.length.toDouble()
@@ -224,7 +225,7 @@ class RectangleFiller(
         maximumRadius: Float,
         toothWidth: Float
     ): Float {
-        val seedRadius = Random.nextFloat() * (maximumRadius - minimumRadius) + minimumRadius
+        val seedRadius = randomFloatGenerator() * (maximumRadius - minimumRadius) + minimumRadius
         val seedDiameter = seedRadius * 2f
         var numberOfTeeth = (seedDiameter / toothWidth).toInt()
         if (seedDiameter / toothWidth != numberOfTeeth.toFloat()) {

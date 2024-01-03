@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.mitteloupe.loader.ProgressState
 import com.mitteloupe.loader.gears.composable.Gear
 import com.mitteloupe.loader.gears.mechanism.GearMesher
 import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
@@ -32,10 +31,11 @@ import com.mitteloupe.loader.gears.mechanism.RectangleFiller
 import com.mitteloupe.loader.gears.model.Gear
 import com.mitteloupe.loader.gears.model.GearConfiguration
 import com.mitteloupe.loader.gears.model.GearType
-import java.time.Instant
+import com.mitteloupe.loader.gears.model.ProgressState
 import kotlinx.coroutines.delay
+import kotlinx.datetime.Clock
 
-private val startTime = Instant.now().toEpochMilli()
+private val startTime = Clock.System.now().toEpochMilliseconds()
 
 @Composable
 fun GearsLoader(
@@ -117,8 +117,8 @@ fun GearsLoader(
     LaunchedEffect(Unit) {
         while (true) {
             val newRotation =
-                (Instant.now()
-                    .toEpochMilli() - startTime).toFloat() / 1000f * PI_FLOAT_2 * velocity
+                (Clock.System.now()
+                    .toEpochMilliseconds() - startTime).toFloat() / 1000f * PI_FLOAT_2 * velocity
             if (newRotation != rotation) {
                 rotation = newRotation
             }

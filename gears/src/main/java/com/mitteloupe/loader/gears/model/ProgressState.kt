@@ -1,4 +1,4 @@
-package com.mitteloupe.loader
+package com.mitteloupe.loader.gears.model
 
 interface ProgressState {
     fun stateAtPosition(range: Int, value: Int): Float

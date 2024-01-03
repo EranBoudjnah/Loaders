@@ -28,11 +28,18 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.GearsLoader
+import com.mitteloupe.loader.gears.mechanism.sqrt
 import com.mitteloupe.loader.gears.model.GearConfiguration
 import com.mitteloupe.loader.gears.model.GearType
+import com.mitteloupe.loader.gears.model.ProgressState
 import com.mitteloupe.loader.ui.theme.LoadersTheme
 import kotlin.math.max
-import kotlin.math.min
+
+private const val minimalRadiusValue = 12f
+private const val maximalRadiusValue = 60f
+private const val maximalToothRoundnessValue = 3f
+private const val minimalToothWidth = 2f
+private val maximalToothWidth = maximalRadiusValue * 3f.sqrt()
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +51,10 @@ class MainActivity : ComponentActivity() {
                 val minimumRadius = remember { mutableFloatStateOf(13f) }
                 val maximumRadius = remember { mutableFloatStateOf(32f) }
                 val gearType = remember { mutableStateOf<GearType>(GearType.Square) }
+                val toothDepth = remember { mutableFloatStateOf(4f) }
+                val toothWidth = remember { mutableFloatStateOf(6f) }
+                val holeRadius = remember { mutableFloatStateOf(4f) }
+                val toothRoundness = remember { mutableFloatStateOf(1f) }
                 val scrollState = rememberScrollState()
                 Column(
                     modifier = Modifier
@@ -55,11 +66,11 @@ class MainActivity : ComponentActivity() {
                             overflow = false,
                             minimumRadius = minimumRadius.floatValue.dp,
                             maximumRadius = maximumRadius.floatValue.dp,
-                            toothDepth = 4f.dp,
-                            toothWidth = 6f.dp,
-                            toothRoundness = 1f.dp
+                            toothDepth = toothDepth.floatValue.dp,
+                            toothWidth = toothWidth.floatValue.dp,
+                            toothRoundness = toothRoundness.floatValue.dp
                         ),
-                        holeRadius = 4f.dp,
+                        holeRadius = holeRadius.value.dp,
                         gearColor = SolidColor(Color(94, 194, 194, 255)),
                         gearType = gearType.value,
                         progressState = ProgressState.Progress(
@@ -76,7 +87,11 @@ class MainActivity : ComponentActivity() {
                         maximumRadius = maximumRadius,
                         progress = progress,
                         tolerance = tolerance,
-                        gearType = gearType
+                        gearType = gearType,
+                        toothDepth = toothDepth,
+                        toothWidth = toothWidth,
+                        holeRadius = holeRadius,
+                        toothRoundness = toothRoundness
                     )
                 }
             }
@@ -90,17 +105,27 @@ private fun ControlPanel(
     maximumRadius: MutableState<Float>,
     progress: MutableState<Int>,
     tolerance: MutableState<Int>,
-    gearType: MutableState<GearType>
+    gearType: MutableState<GearType>,
+    toothDepth: MutableState<Float>,
+    toothWidth: MutableState<Float>,
+    holeRadius: MutableState<Float>,
+    toothRoundness: MutableState<Float>
 ) {
+    fun maximalToothDepth() =
+        minimumRadius.value - max(holeRadius.value, toothWidth.value / 3f.sqrt())
+
+    fun maximalToothWidth(): Float = (minimumRadius.value - toothDepth.value) * 3f.sqrt()
+    fun maximalHoleRadius() = minimumRadius.value - toothDepth.value - .01f
+
     Column(
         modifier = Modifier
+            .fillMaxWidth()
     ) {
         SliderWithTitle(
             text = "Progress",
             value = progress.value.toFloat() / 100f,
             onValueChange = { progress.value = (it * 100f).toInt() },
             modifier = Modifier
-                .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
         SliderWithTitle(
@@ -117,23 +142,66 @@ private fun ControlPanel(
                 .align(Alignment.CenterHorizontally)
         ) {
             SliderWithTitle(
-                text = "Minimum size",
-                value = (minimumRadius.value - 12f) / 48f,
+                text = "Minimum radius",
+                value = (minimumRadius.value - minimalRadiusValue) / maximalRadiusValue,
                 onValueChange = {
-                    minimumRadius.value = min(12f + it * 48f, maximumRadius.value)
+                    minimumRadius.value = (minimalRadiusValue + it * maximalRadiusValue)
+                        .coerceIn(toothDepth.value + holeRadius.value, maximumRadius.value)
                 },
                 modifier = Modifier.fillMaxWidth(.5f)
             )
             SliderWithTitle(
-                text = "Maximum size",
-                value = (maximumRadius.value - 12f) / 48f,
+                text = "Maximum radius",
+                value = (maximumRadius.value - minimalRadiusValue) / maximalRadiusValue,
                 onValueChange = {
-                    maximumRadius.value = max(minimumRadius.value, it * 48f + 12f)
+                    maximumRadius.value =
+                        max(minimumRadius.value, it * maximalRadiusValue + minimalRadiusValue)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
         }
         TwoValueSelector("Square" to GearType.Square, "Sharp" to GearType.Sharp, gearType)
+        SliderWithTitle(
+            text = "Tooth depth",
+            value = toothDepth.value / maximalRadiusValue,
+            onValueChange = { value ->
+                toothDepth.value = (value * maximalRadiusValue).coerceIn(0f, maximalToothDepth())
+            },
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        SliderWithTitle(
+            text = "Tooth width",
+            value = toothWidth.value / maximalToothWidth,
+            onValueChange = { value ->
+                toothWidth.value =
+                    (value * maximalToothWidth).coerceIn(minimalToothWidth, maximalToothWidth())
+            },
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        SliderWithTitle(
+            text = "Hole radius",
+            value = holeRadius.value / maximalRadiusValue,
+            onValueChange = { value ->
+                holeRadius.value = (value * maximalRadiusValue).coerceIn(0f, maximalHoleRadius())
+            },
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        SliderWithTitle(
+            text = "Tooth roundness",
+            value = toothRoundness.value / maximalToothRoundnessValue,
+            onValueChange = {
+                toothRoundness.value = it * maximalToothRoundnessValue
+            },
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        )
     }
 }
 

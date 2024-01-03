@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Loaders"
 include(":app")
+include(":gears")
