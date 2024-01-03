@@ -167,8 +167,8 @@ private fun Path.drawSquareTooth(
     gearCenterY: Float,
     startAngle: Float,
     endAngle: Float,
-    quarterToothAngle: Float,
-    halfToothAngle: Float,
+    toothMiddleAngle: Float,
+    toothStartAngle: Float,
     innerRadius: Float,
     outerRadius: Float
 ) {
@@ -184,17 +184,17 @@ private fun Path.drawSquareTooth(
             gearCenterY + sin(startAngle) * innerRadius
         )
     }
-    val toothBaseX = cos(startAngle + halfToothAngle) * innerRadius
-    val toothBaseY = sin(startAngle + halfToothAngle)
+    val toothBaseX = cos(startAngle + toothStartAngle) * innerRadius
+    val toothBaseY = sin(startAngle + toothStartAngle) * innerRadius
     lineTo(
         gearCenterX + toothBaseX,
-        gearCenterY + toothBaseY * innerRadius
+        gearCenterY + toothBaseY
     )
-    val toothEndX = cos(startAngle + halfToothAngle + quarterToothAngle) * toothRadius
-    val toothEndY = sin(startAngle + halfToothAngle + quarterToothAngle) * toothRadius
+    val toothEndX = cos(startAngle + toothStartAngle + toothMiddleAngle) * toothRadius
+    val toothEndY = sin(startAngle + toothStartAngle + toothMiddleAngle) * toothRadius
     lineTo(
         gearCenterX + toothBaseX + toothEndX,
-        gearCenterY + toothBaseY * innerRadius + toothEndY
+        gearCenterY + toothBaseY + toothEndY
     )
     lineTo(
         gearCenterX + cos(endAngle) * innerRadius + toothEndX,
