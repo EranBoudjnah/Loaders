@@ -8,6 +8,5 @@ data class GearConfiguration(
     val minimumRadius: Dp = 13f.dp,
     val maximumRadius: Dp = 32f.dp,
     val toothDepth: Dp = 3f.dp,
-    val toothWidth: Dp = 4f.dp,
-    val toothRoundness: Dp = 1f.dp,
+    val toothWidth: Dp = 4f.dp
 )

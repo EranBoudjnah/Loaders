@@ -71,9 +71,9 @@ class MainActivity : ComponentActivity() {
                             minimumRadius = minimumRadius.floatValue.dp,
                             maximumRadius = maximumRadius.floatValue.dp,
                             toothDepth = toothDepth.floatValue.dp,
-                            toothWidth = toothWidth.floatValue.dp,
-                            toothRoundness = toothRoundness.floatValue.dp
+                            toothWidth = toothWidth.floatValue.dp
                         ),
+                        toothRoundness = toothRoundness.floatValue.dp,
                         holeRadius = holeRadius.value.dp,
                         gearColor = SolidColor(color.value),
                         gearType = gearType.value,
@@ -295,9 +295,9 @@ fun Preview() {
                     minimumRadius = minimumRadius.dp,
                     maximumRadius = maximumRadius.dp,
                     toothDepth = 4f.dp,
-                    toothWidth = 6f.dp,
-                    toothRoundness = 1f.dp
+                    toothWidth = 6f.dp
                 ),
+                toothRoundness = 1f.dp,
                 holeRadius = 4f.dp,
                 gearColor = SolidColor(Color(94, 194, 194, 255)),
                 gearType = GearType.Square,

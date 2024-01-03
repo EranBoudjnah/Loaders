@@ -60,7 +60,7 @@ internal fun Gear(
                 transformOrigin = TransformOrigin(0.25f, 0.25f)
             )
     ) {
-        val radiusPx = gear.radius.dp.toPx()
+        val radiusPx = (gear.radius.dp - toothRoundness / 2f).toPx()
         val toothDepthPx = toothDepth.toPx()
         val innerRadius = radiusPx - toothDepthPx
         with(path) {
