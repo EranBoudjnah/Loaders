@@ -69,9 +69,9 @@ class RectangleFiller(
         updateIntersectionRectForRadius(rectangle, nextRadius)
         if (intersectionRect.isEmpty) return false
 
-        val arcsInRect = originGear.outerArc(nextRadius - toothDepth * .8f)
+        val arcsInRect = originGear.outerArc(nextRadius - toothDepth * .75f)
             .intersectionWithRectangle(intersectionRect)
-        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius + toothDepth * 1.2f)
+        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius + 1f)
 
         if (validNextPoints.isEmpty()) {
             if (nextRadius > minimumRadius) {
