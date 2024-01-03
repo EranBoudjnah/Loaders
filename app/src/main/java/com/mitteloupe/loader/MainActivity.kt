@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.GearsLoader
@@ -34,6 +36,7 @@ import com.mitteloupe.loader.gears.model.GearType
 import com.mitteloupe.loader.gears.model.ProgressState
 import com.mitteloupe.loader.ui.theme.LoadersTheme
 import kotlin.math.max
+import kotlin.random.Random
 
 private const val minimalRadiusValue = 12f
 private const val maximalRadiusValue = 60f
@@ -48,6 +51,7 @@ class MainActivity : ComponentActivity() {
             LoadersTheme {
                 val progress = remember { mutableIntStateOf(75) }
                 val tolerance = remember { mutableIntStateOf(10) }
+                val color = remember { mutableStateOf(Color(94, 194, 194, 255)) }
                 val minimumRadius = remember { mutableFloatStateOf(13f) }
                 val maximumRadius = remember { mutableFloatStateOf(32f) }
                 val gearType = remember { mutableStateOf<GearType>(GearType.Square) }
@@ -71,7 +75,7 @@ class MainActivity : ComponentActivity() {
                             toothRoundness = toothRoundness.floatValue.dp
                         ),
                         holeRadius = holeRadius.value.dp,
-                        gearColor = SolidColor(Color(94, 194, 194, 255)),
+                        gearColor = SolidColor(color.value),
                         gearType = gearType.value,
                         progressState = ProgressState.Progress(
                             progress.intValue,
@@ -87,6 +91,7 @@ class MainActivity : ComponentActivity() {
                         maximumRadius = maximumRadius,
                         progress = progress,
                         tolerance = tolerance,
+                        color = color,
                         gearType = gearType,
                         toothDepth = toothDepth,
                         toothWidth = toothWidth,
@@ -105,6 +110,7 @@ private fun ControlPanel(
     maximumRadius: MutableState<Float>,
     progress: MutableState<Int>,
     tolerance: MutableState<Int>,
+    color: MutableState<Color>,
     gearType: MutableState<GearType>,
     toothDepth: MutableState<Float>,
     toothWidth: MutableState<Float>,
@@ -136,6 +142,24 @@ private fun ControlPanel(
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
+
+        Button(
+            onClick = {
+                color.value =
+                    Color.hsl(Random.nextFloat() * 360f, Random.nextInt(3).toFloat() * .45f, .7f)
+            },
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally)
+        ) {
+            Text(
+                text = "Change Color",
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
+
         Row(
             modifier = Modifier
                 .width(350.dp)
