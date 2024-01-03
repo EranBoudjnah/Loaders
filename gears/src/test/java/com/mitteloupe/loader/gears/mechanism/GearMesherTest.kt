@@ -139,7 +139,7 @@ class GearMesherTest(
         ) = arrayOf(
             testCaseTitle,
             Gear(
-                center = com.mitteloupe.android.mockPointF(firstGearCenterX, firstGearCenterY),
+                center = mockPointF(firstGearCenterX, firstGearCenterY),
                 radius = firstGearRadius,
                 rotation = firstGearRotation,
                 isClockwise = firstGearIsClockwise,
@@ -147,7 +147,7 @@ class GearMesherTest(
                 toothDepth = toothDepth,
                 canBeExtended = false
             ),
-            com.mitteloupe.android.mockPointF(newGearCenterX, newGearCenterY),
+            mockPointF(newGearCenterX, newGearCenterY),
             newGearRadius,
             expectedMeshingAngle
         )
