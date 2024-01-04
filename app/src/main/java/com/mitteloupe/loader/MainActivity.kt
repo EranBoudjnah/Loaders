@@ -40,7 +40,7 @@ import kotlin.random.Random
 
 private const val minimalRadiusValue = 12f
 private const val maximalRadiusValue = 60f
-private const val maximalToothRoundnessValue = 3f
+private const val maximalToothRoundnessValue = 1f
 private const val minimalToothWidth = 2f
 private val maximalToothWidth = maximalRadiusValue * 3f.sqrt()
 
@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                             toothDepth = toothDepth.floatValue.dp,
                             toothWidth = toothWidth.floatValue.dp
                         ),
-                        toothRoundness = toothRoundness.floatValue.dp,
+                        toothRoundness = toothRoundness.floatValue,
                         holeRadius = holeRadius.value.dp,
                         gearColor = SolidColor(color.value),
                         gearType = gearType.value,
@@ -297,7 +297,7 @@ fun Preview() {
                     toothDepth = 4f.dp,
                     toothWidth = 6f.dp
                 ),
-                toothRoundness = 1f.dp,
+                toothRoundness = 1f,
                 holeRadius = 4f.dp,
                 gearColor = SolidColor(Color(94, 194, 194, 255)),
                 gearType = GearType.Square,

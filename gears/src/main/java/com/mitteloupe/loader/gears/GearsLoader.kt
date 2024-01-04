@@ -41,7 +41,7 @@ private val startTime = Clock.System.now().toEpochMilliseconds()
 fun GearsLoader(
     modifier: Modifier = Modifier,
     gearConfiguration: GearConfiguration,
-    toothRoundness: Dp = 1f.dp,
+    toothRoundness: Float = 1f,
     holeRadius: Dp = 3f.dp,
     velocity: Float = 1f,
     gearColor: Brush = SolidColor(Color.Gray),
@@ -145,7 +145,6 @@ fun GearsLoader(
                     Gear(
                         modifier = Modifier,
                         gear = gear,
-                        toothDepth = gearConfigurationState.toothDepth,
                         rotation = rotation,
                         toothRoundness = toothRoundness,
                         holeRadius = holeRadius,
