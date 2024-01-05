@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                             toothWidth = toothWidth.floatValue.dp
                         ),
                         toothRoundness = toothRoundness.floatValue,
-                        holeRadius = holeRadius.value.dp,
+                        holeRadius = holeRadius.floatValue.dp,
                         gearColor = SolidColor(color.value),
                         gearType = gearType.value,
                         progressState = ProgressState.Progress(

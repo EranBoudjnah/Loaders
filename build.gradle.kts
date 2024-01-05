@@ -13,3 +13,9 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }
+
+tasks.withType(Test::class) {
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
