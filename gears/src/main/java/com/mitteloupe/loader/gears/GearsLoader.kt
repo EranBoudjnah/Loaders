@@ -1,12 +1,16 @@
 package com.mitteloupe.loader.gears
 
 import android.graphics.RectF
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,10 +36,6 @@ import com.mitteloupe.loader.gears.model.Gear
 import com.mitteloupe.loader.gears.model.GearConfiguration
 import com.mitteloupe.loader.gears.model.GearType
 import com.mitteloupe.loader.gears.model.ProgressState
-import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
-
-private val startTime = Clock.System.now().toEpochMilliseconds()
 
 @Composable
 fun GearsLoader(
@@ -43,7 +43,7 @@ fun GearsLoader(
     gearConfiguration: GearConfiguration,
     toothRoundness: Float = 1f,
     holeRadius: Dp = 3f.dp,
-    velocity: Float = 1f,
+    rotationTimeMilliseconds: Int = 500,
     gearColor: Brush = SolidColor(Color.Gray),
     gearType: GearType = GearType.Sharp,
     progressState: ProgressState = ProgressState.Indefinite,
@@ -111,21 +111,15 @@ fun GearsLoader(
         savedGears.value = gears
     }
 
-    var rotation by remember {
-        mutableFloatStateOf(0f)
-    }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            val newRotation =
-                (Clock.System.now()
-                    .toEpochMilliseconds() - startTime).toFloat() / 1000f * PI_FLOAT_2 * velocity
-            if (newRotation != rotation) {
-                rotation = newRotation
-            }
-            delay(10)
-        }
-    }
+    val infiniteTransition = rememberInfiniteTransition(label = "Gear rotation transition")
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = PI_FLOAT_2,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = rotationTimeMilliseconds, easing = LinearEasing)
+        ),
+        label = "Gear rotation animation"
+    )
 
     Box(
         modifier = modifier

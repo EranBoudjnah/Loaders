@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.drawscope.rotateRad
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,7 +48,6 @@ internal fun Gear(
     val numberOfTeeth = gear.teethCount
     val toothAngle = (360f / numberOfTeeth).radians * FLOAT_INACCURACY_CORRECTION
     val halfToothAngle = toothAngle / 2f
-    val relativeRotation = gear.rotation - PI_FLOAT_HALF - rotation * gear.relativeSpeed
 
     Canvas(
         modifier = modifier
@@ -60,65 +60,67 @@ internal fun Gear(
                 transformOrigin = TransformOrigin(0.25f, 0.25f)
             )
     ) {
-        val radiusPx = (gear.radius.dp).toPx()
-        val toothDepthPx = gear.toothDepth.dp.toPx()
-        val innerRadius = radiusPx - toothDepthPx
-        val centerPx = (gear.radius.dp).toPx()
-        with(path) {
-            reset()
-            when (gearType) {
-                GearType.Sharp -> {
-                    (0 until numberOfTeeth).forEach { toothIndex ->
-                        val startAngle = (toothIndex.toFloat() * toothAngle) + relativeRotation
+        rotateRad(gear.rotation - PI_FLOAT_HALF - rotation * gear.relativeSpeed) {
+            val radiusPx = (gear.radius.dp).toPx()
+            val toothDepthPx = gear.toothDepth.dp.toPx()
+            val innerRadius = radiusPx - toothDepthPx
+            val centerPx = (gear.radius.dp).toPx()
+            with(path) {
+                reset()
+                when (gearType) {
+                    GearType.Sharp -> {
+                        (0 until numberOfTeeth).forEach { toothIndex ->
+                            val startAngle = (toothIndex.toFloat() * toothAngle)
 
-                        drawSharpTooth(
-                            toothIndex,
-                            centerPx,
-                            centerPx,
-                            startAngle,
-                            halfToothAngle,
-                            innerRadius,
-                            radiusPx,
-                            toothRoundness
-                        )
+                            drawSharpTooth(
+                                toothIndex,
+                                centerPx,
+                                centerPx,
+                                startAngle,
+                                halfToothAngle,
+                                innerRadius,
+                                radiusPx,
+                                toothRoundness
+                            )
+                        }
+                    }
+
+                    GearType.Square -> {
+                        (0 until numberOfTeeth).forEach { toothIndex ->
+                            val startAngle = (toothIndex.toFloat() * toothAngle)
+                            val endAngle = startAngle + toothAngle
+
+                            drawSquareTooth(
+                                toothIndex = toothIndex,
+                                gearCenterX = centerPx,
+                                gearCenterY = centerPx,
+                                startAngle = startAngle,
+                                endAngle = endAngle,
+                                toothWidth = gear.toothWidth.dp.toPx(),
+                                innerRadius = innerRadius,
+                                outerRadius = radiusPx,
+                                toothRoundness = toothRoundness
+                            )
+                        }
                     }
                 }
 
-                GearType.Square -> {
-                    (0 until numberOfTeeth).forEach { toothIndex ->
-                        val startAngle = (toothIndex.toFloat() * toothAngle) + relativeRotation
-                        val endAngle = startAngle + toothAngle
+                close()
 
-                        drawSquareTooth(
-                            toothIndex = toothIndex,
-                            gearCenterX = centerPx,
-                            gearCenterY = centerPx,
-                            startAngle = startAngle,
-                            endAngle = endAngle,
-                            toothWidth = gear.toothWidth.dp.toPx(),
-                            innerRadius = innerRadius,
-                            outerRadius = radiusPx,
-                            toothRoundness = toothRoundness
-                        )
-                    }
-                }
-            }
-
-            close()
-
-            val holeRadiusPx = holeRadius.toPx()
-            addOval(
-                Rect(
-                    centerPx - holeRadiusPx,
-                    centerPx - holeRadiusPx,
-                    centerPx + holeRadiusPx,
-                    centerPx + holeRadiusPx
+                val holeRadiusPx = holeRadius.toPx()
+                addOval(
+                    Rect(
+                        centerPx - holeRadiusPx,
+                        centerPx - holeRadiusPx,
+                        centerPx + holeRadiusPx,
+                        centerPx + holeRadiusPx
+                    )
                 )
-            )
 
-            fillType = PathFillType.EvenOdd
+                fillType = PathFillType.EvenOdd
+            }
+            drawPath(path = path, brush = brush)
         }
-        drawPath(path = path, brush = brush)
     }
 }
 
