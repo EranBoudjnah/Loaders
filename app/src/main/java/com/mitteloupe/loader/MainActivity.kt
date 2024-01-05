@@ -38,11 +38,11 @@ import com.mitteloupe.loader.ui.theme.LoadersTheme
 import kotlin.math.max
 import kotlin.random.Random
 
-private const val minimalRadiusValue = 12f
-private const val maximalRadiusValue = 60f
-private const val maximalToothRoundnessValue = 1f
-private const val minimalToothWidth = 2f
-private val maximalToothWidth = maximalRadiusValue * 3f.sqrt()
+private const val MINIMAL_RADIUS_VALUE = 12f
+private const val MAXIMAL_RADIUS_VALUE = 60f
+private const val MAXIMAL_TOOTH_ROUNDNESS_VALUE = 1f
+private const val MINIMAL_TOOTH_WIDTH = 2f
+private val maximalToothWidth = MAXIMAL_RADIUS_VALUE * 3f.sqrt()
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -167,19 +167,19 @@ private fun ControlPanel(
         ) {
             SliderWithTitle(
                 text = "Minimum radius",
-                value = (minimumRadius.value - minimalRadiusValue) / maximalRadiusValue,
+                value = (minimumRadius.value - MINIMAL_RADIUS_VALUE) / MAXIMAL_RADIUS_VALUE,
                 onValueChange = {
-                    minimumRadius.value = (minimalRadiusValue + it * maximalRadiusValue)
+                    minimumRadius.value = (MINIMAL_RADIUS_VALUE + it * MAXIMAL_RADIUS_VALUE)
                         .coerceIn(toothDepth.value + holeRadius.value, maximumRadius.value)
                 },
                 modifier = Modifier.fillMaxWidth(.5f)
             )
             SliderWithTitle(
                 text = "Maximum radius",
-                value = (maximumRadius.value - minimalRadiusValue) / maximalRadiusValue,
+                value = (maximumRadius.value - MINIMAL_RADIUS_VALUE) / MAXIMAL_RADIUS_VALUE,
                 onValueChange = {
                     maximumRadius.value =
-                        max(minimumRadius.value, it * maximalRadiusValue + minimalRadiusValue)
+                        max(minimumRadius.value, it * MAXIMAL_RADIUS_VALUE + MINIMAL_RADIUS_VALUE)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -187,9 +187,9 @@ private fun ControlPanel(
         TwoValueSelector("Square" to GearType.Square, "Sharp" to GearType.Sharp, gearType)
         SliderWithTitle(
             text = "Tooth depth",
-            value = toothDepth.value / maximalRadiusValue,
+            value = toothDepth.value / MAXIMAL_RADIUS_VALUE,
             onValueChange = { value ->
-                toothDepth.value = (value * maximalRadiusValue).coerceIn(0f, maximalToothDepth())
+                toothDepth.value = (value * MAXIMAL_RADIUS_VALUE).coerceIn(0f, maximalToothDepth())
             },
             modifier = Modifier
                 .width(350.dp)
@@ -200,7 +200,7 @@ private fun ControlPanel(
             value = toothWidth.value / maximalToothWidth,
             onValueChange = { value ->
                 toothWidth.value =
-                    (value * maximalToothWidth).coerceIn(minimalToothWidth, maximalToothWidth())
+                    (value * maximalToothWidth).coerceIn(MINIMAL_TOOTH_WIDTH, maximalToothWidth())
             },
             modifier = Modifier
                 .width(350.dp)
@@ -208,9 +208,9 @@ private fun ControlPanel(
         )
         SliderWithTitle(
             text = "Hole radius",
-            value = holeRadius.value / maximalRadiusValue,
+            value = holeRadius.value / MAXIMAL_RADIUS_VALUE,
             onValueChange = { value ->
-                holeRadius.value = (value * maximalRadiusValue).coerceIn(0f, maximalHoleRadius())
+                holeRadius.value = (value * MAXIMAL_RADIUS_VALUE).coerceIn(0f, maximalHoleRadius())
             },
             modifier = Modifier
                 .width(350.dp)
@@ -218,9 +218,9 @@ private fun ControlPanel(
         )
         SliderWithTitle(
             text = "Tooth roundness",
-            value = toothRoundness.value / maximalToothRoundnessValue,
+            value = toothRoundness.value / MAXIMAL_TOOTH_ROUNDNESS_VALUE,
             onValueChange = {
-                toothRoundness.value = it * maximalToothRoundnessValue
+                toothRoundness.value = it * MAXIMAL_TOOTH_ROUNDNESS_VALUE
             },
             modifier = Modifier
                 .width(350.dp)

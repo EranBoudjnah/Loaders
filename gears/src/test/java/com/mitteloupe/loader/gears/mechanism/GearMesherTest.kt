@@ -24,7 +24,8 @@ class GearMesherTest(
         @Parameters(name = "{0}")
         fun data(): Collection<Array<*>> = listOf(
             testCase(
-                testCaseTitle = "Given same size gear with odd tooth number above returns 0 degrees",
+                testCaseTitle = "Given same size gear with odd tooth number above " +
+                    "returns 0 degrees",
                 firstGearCenterX = 0f,
                 firstGearCenterY = 0f,
                 firstGearRadius = 55f,
@@ -38,7 +39,8 @@ class GearMesherTest(
                 expectedMeshingAngle = 0f
             ),
             testCase(
-                testCaseTitle = "Given same size gear with odd tooth number on right returns 180 degrees",
+                testCaseTitle = "Given same size gear with odd tooth number on right " +
+                    "returns 180 degrees",
                 firstGearCenterX = 0f,
                 firstGearCenterY = 0f,
                 firstGearRadius = 55f,
@@ -52,7 +54,8 @@ class GearMesherTest(
                 expectedMeshingAngle = PI_FLOAT
             ),
             testCase(
-                testCaseTitle = "Given same size gear with odd tooth number below returns 0 degrees",
+                testCaseTitle = "Given same size gear with odd tooth number below " +
+                    "returns 0 degrees",
                 firstGearCenterX = 0f,
                 firstGearCenterY = 0f,
                 firstGearRadius = 55f,
@@ -66,7 +69,8 @@ class GearMesherTest(
                 expectedMeshingAngle = 0f
             ),
             testCase(
-                testCaseTitle = "Given half size gear with odd tooth number below returns 180 degrees",
+                testCaseTitle = "Given half size gear with odd tooth number below " +
+                    "returns 180 degrees",
                 firstGearCenterX = 0f,
                 firstGearCenterY = 0f,
                 firstGearRadius = 100f,
@@ -80,7 +84,8 @@ class GearMesherTest(
                 expectedMeshingAngle = PI_FLOAT
             ),
             testCase(
-                testCaseTitle = "Given same size gear with even tooth number above returns 18 degrees",
+                testCaseTitle = "Given same size gear with even tooth number above " +
+                    "returns 18 degrees",
                 firstGearCenterX = 0f,
                 firstGearCenterY = 0f,
                 firstGearRadius = 100f,
@@ -94,7 +99,8 @@ class GearMesherTest(
                 expectedMeshingAngle = PI_FLOAT / 10f
             ),
             testCase(
-                testCaseTitle = "Given same size gear with even tooth number below returns 18 degrees",
+                testCaseTitle = "Given same size gear with even tooth number below " +
+                    "returns 18 degrees",
                 firstGearCenterX = 0f,
                 firstGearCenterY = 10f,
                 firstGearRadius = 100f,
@@ -108,7 +114,8 @@ class GearMesherTest(
                 expectedMeshingAngle = PI_FLOAT / 10f
             ),
             testCase(
-                testCaseTitle = "Given rotated 90, half size gear with odd tooth number below returns 0 degrees",
+                testCaseTitle = "Given rotated 90, half size gear with odd tooth number below " +
+                    "returns 0 degrees",
                 firstGearCenterX = 10f,
                 firstGearCenterY = 0f,
                 firstGearRadius = 100f,

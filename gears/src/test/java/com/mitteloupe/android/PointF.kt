@@ -9,8 +9,4 @@ fun mockPointF(x: Float = 0f, y: Float = 0f) = mock<PointF>().apply {
     reflectSetValue(this, "x", x)
     reflectSetValue(this, "y", y)
     given(this.toString()).willReturn("PointF($x, $y)")
-}/* {
-    on { it.x }.thenReturn(x)
-    on { it.y }.thenReturn(y)
-    on { it.toString() }.thenReturn("PointF($x, $y)")
-}*/
+}

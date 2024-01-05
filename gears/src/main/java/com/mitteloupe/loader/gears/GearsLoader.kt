@@ -56,10 +56,12 @@ fun GearsLoader(
 
     val currentLocalDensity = LocalDensity.current
 
-    val savedGears = rememberSaveable<List<Gear>>(stateSaver = listSaver(
-        save = { gears -> gears },
-        restore = { it.toMutableStateList() }
-    )) { mutableStateOf(emptyList()) }
+    val savedGears = rememberSaveable<List<Gear>>(
+        stateSaver = listSaver(
+            save = { gears -> gears },
+            restore = { it.toMutableStateList() }
+        )
+    ) { mutableStateOf(emptyList()) }
 
     val gears by remember(size) {
         derivedStateOf {

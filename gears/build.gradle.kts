@@ -10,7 +10,9 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project.dependencies.platform("androidx.compose:compose-bom:2023.08.00"))
+                implementation(
+                    project.dependencies.platform("androidx.compose:compose-bom:2023.08.00")
+                )
                 implementation("androidx.compose.ui:ui")
                 implementation("androidx.compose.ui:ui-graphics")
                 implementation("androidx.compose.ui:ui-tooling-preview")

@@ -49,10 +49,7 @@ data class Edge(
         }
     }
 
-    private fun isPointInEdge(
-        point: PointF,
-        edgeLength: Float
-    ): Boolean {
+    private fun isPointInEdge(point: PointF, edgeLength: Float): Boolean {
         val dot = (point.x - point1.x) * (point2.x - point1.x) +
             (point.y - point1.y) * (point2.y - point1.y)
         return dot >= 0 && dot <= edgeLength * edgeLength

@@ -5,11 +5,7 @@ import com.mitteloupe.loader.gears.model.Gear
 import kotlin.math.atan2
 
 class GearMesher {
-    fun meshingAngle(
-        firstGear: Gear,
-        newGearCenter: PointF,
-        newGearRadius: Float
-    ): Float {
+    fun meshingAngle(firstGear: Gear, newGearCenter: PointF, newGearRadius: Float): Float {
         val newGearTeethCount = numberOfTeeth(
             toothWidth = firstGear.toothWidth,
             outerRadius = newGearRadius,

@@ -4,22 +4,20 @@ import java.lang.reflect.Field
 import org.junit.Assert.fail
 
 object FieldReflection {
-    fun reflectValue(classToReflect: Class<Any>, fieldNameValueToFetch: String): Any? =
-        try {
-            val reflectedField = reflectField(classToReflect, fieldNameValueToFetch)
-            reflectedField.isAccessible = true
-            reflectedField[classToReflect]
-        } catch (exception: Exception) {
-            fail("Failed to reflect $fieldNameValueToFetch")
-        }
+    fun reflectValue(classToReflect: Class<Any>, fieldNameValueToFetch: String): Any? = try {
+        val reflectedField = reflectField(classToReflect, fieldNameValueToFetch)
+        reflectedField.isAccessible = true
+        reflectedField[classToReflect]
+    } catch (exception: Exception) {
+        fail("Failed to reflect $fieldNameValueToFetch")
+    }
 
-    fun reflectValue(objectToReflect: Any, fieldNameValueToFetch: String): Any? =
-        try {
-            val reflectedField = reflectField(objectToReflect.javaClass, fieldNameValueToFetch)
-            reflectedField[objectToReflect]
-        } catch (exception: Exception) {
-            fail("Failed to reflect $fieldNameValueToFetch")
-        }
+    fun reflectValue(objectToReflect: Any, fieldNameValueToFetch: String): Any? = try {
+        val reflectedField = reflectField(objectToReflect.javaClass, fieldNameValueToFetch)
+        reflectedField[objectToReflect]
+    } catch (exception: Exception) {
+        fail("Failed to reflect $fieldNameValueToFetch")
+    }
 
     private fun reflectField(classToReflect: Class<Any>, fieldNameValueToFetch: String): Field =
         try {

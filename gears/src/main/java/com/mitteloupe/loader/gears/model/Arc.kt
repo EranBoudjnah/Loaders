@@ -178,10 +178,9 @@ data class Arc(
     private fun intersectionSweepAngles(gear: Gear): List<Float> =
         intersectionPoints(gear).map { it.sweepAngle }
 
-    private fun intersectionCenterAngles(gear: Gear): List<Float> =
-        intersectionPoints(gear).map {
-            atan2(it.y - center.y, it.x - center.x)
-        }
+    private fun intersectionCenterAngles(gear: Gear): List<Float> = intersectionPoints(gear).map {
+        atan2(it.y - center.y, it.x - center.x)
+    }
 
     private val PointF.sweepAngle: Float
         get() {
