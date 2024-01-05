@@ -149,14 +149,6 @@ private fun Path.drawSharpTooth(
     val innerMidY = gearCenterY + midAngleSin * innerRadius
     val outerMidY = gearCenterY + midAngleSin * outerRadius
 
-    val endAngle = startAngle + halfToothAngle * 2f
-    val endAngleCos = cos(endAngle)
-    val innerEndX = gearCenterX + endAngleCos * innerRadius
-    val outerEndX = gearCenterX + endAngleCos * outerRadius
-    val endAngleSin = sin(endAngle)
-    val innerEndY = gearCenterY + endAngleSin * innerRadius
-    val outerEndY = gearCenterY + endAngleSin * outerRadius
-
     if (toothIndex == 0) {
         moveTo(innerStartX, innerStartY)
     }
@@ -175,6 +167,14 @@ private fun Path.drawSharpTooth(
         outerMidX - innerStartX,
         outerMidY - innerStartY
     )
+
+    val endAngle = startAngle + halfToothAngle * 2f
+    val endAngleCos = cos(endAngle)
+    val innerEndX = gearCenterX + endAngleCos * innerRadius
+    val outerEndX = gearCenterX + endAngleCos * outerRadius
+    val endAngleSin = sin(endAngle)
+    val innerEndY = gearCenterY + endAngleSin * innerRadius
+    val outerEndY = gearCenterY + endAngleSin * outerRadius
 
     val controlPoint3X = (outerEndX - outerMidX) / 2f * toothRoundness
     val controlPoint3Y = (outerEndY - outerMidY) / 2f * toothRoundness
