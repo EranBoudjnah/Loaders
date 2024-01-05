@@ -25,6 +25,7 @@ import com.mitteloupe.loader.gears.model.Gear
 import com.mitteloupe.loader.gears.model.GearType
 import kotlin.math.cos
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.sin
 
 private const val FLOAT_INACCURACY_CORRECTION = .999999f
@@ -212,12 +213,6 @@ private fun Path.drawSquareTooth(
     val midAngleCos = cos(midAngle)
     val midAngleSin = sin(midAngle)
 
-    val innerStartX = gearCenterX + midAngleCos * innerRadius + midAngleSin * (toothWidth / 2f)
-    val innerStartY = gearCenterY + midAngleSin * innerRadius - midAngleCos * (toothWidth / 2f)
-    if (toothIndex == 0) {
-        moveTo(innerStartX, innerStartY)
-    }
-
     val baseStartCircleX = gearCenterX + midAngleCos * (innerRadius + roundnessRadius) +
         midAngleSin * (toothWidth / 4f + roundnessRadius)
     val baseStartCircleY = gearCenterY + midAngleSin * (innerRadius + roundnessRadius) -
@@ -232,7 +227,7 @@ private fun Path.drawSquareTooth(
         ),
         midAngle + PI_FLOAT,
         -PI_FLOAT_HALF,
-        false
+        toothIndex == 0
     )
 
     val toothStartCircleX = gearCenterX + midAngleCos * (outerRadius - roundnessRadius) +
@@ -285,8 +280,4 @@ private fun Path.drawSquareTooth(
         -PI_FLOAT_HALF,
         false
     )
-
-    val innerEndX = gearCenterX + midAngleCos * innerRadius - midAngleSin * (toothWidth / 2f)
-    val innerEndY = gearCenterY + midAngleSin * innerRadius + midAngleCos * (toothWidth / 2f)
-    lineTo(innerEndX, innerEndY)
 }

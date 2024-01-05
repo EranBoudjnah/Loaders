@@ -3,22 +3,18 @@ package com.mitteloupe.loader.gears.model
 interface ProgressState {
     fun stateAtPosition(range: Int, value: Int): Float
 
-    data object Indefinite : ProgressState {
+    data object Indeterminate : ProgressState {
         override fun stateAtPosition(range: Int, value: Int): Float = 1f
     }
 
-    data class Progress(
-        val value: Int,
-        val minimum: Int = 0,
-        val maximum: Int = 100,
-        val tolerance: Int = 0
+    data class Determinate(
+        val progress: Float,
+        val tolerance: Float = 0f
     ) : ProgressState {
-        private val range = maximum - minimum
-        private val normalizedValue = (value - minimum).toFloat() / range.toFloat()
         override fun stateAtPosition(range: Int, value: Int): Float {
             val floatRange = range.toFloat()
-            val relativeValue = normalizedValue * floatRange
-            val relativeTolerance = tolerance.toFloat() / this.range.toFloat() * floatRange
+            val relativeValue = progress * floatRange
+            val relativeTolerance = tolerance * floatRange
             return when {
                 value <= relativeValue -> 1f
                 value > relativeValue + relativeTolerance -> 0f

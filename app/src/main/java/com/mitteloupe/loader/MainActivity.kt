@@ -49,8 +49,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LoadersTheme {
-                val progress = remember { mutableIntStateOf(75) }
-                val tolerance = remember { mutableIntStateOf(10) }
+                val progress = remember { mutableFloatStateOf(.75f) }
                 val color = remember { mutableStateOf(Color(94, 194, 194, 255)) }
                 val minimumRadius = remember { mutableFloatStateOf(13f) }
                 val maximumRadius = remember { mutableFloatStateOf(32f) }
@@ -75,11 +74,10 @@ class MainActivity : ComponentActivity() {
                         ),
                         toothRoundness = toothRoundness.floatValue,
                         holeRadius = holeRadius.floatValue.dp,
-                        gearColor = SolidColor(color.value),
+                        color = color.value,
                         gearType = gearType.value,
-                        progressState = ProgressState.Progress(
-                            progress.intValue,
-                            tolerance = tolerance.intValue
+                        progressState = ProgressState.Determinate(
+                            progress.floatValue
                         ),
                         modifier = Modifier
                             .width(350.dp)
@@ -90,7 +88,6 @@ class MainActivity : ComponentActivity() {
                         minimumRadius = minimumRadius,
                         maximumRadius = maximumRadius,
                         progress = progress,
-                        tolerance = tolerance,
                         color = color,
                         gearType = gearType,
                         toothDepth = toothDepth,
@@ -108,8 +105,7 @@ class MainActivity : ComponentActivity() {
 private fun ControlPanel(
     minimumRadius: MutableState<Float>,
     maximumRadius: MutableState<Float>,
-    progress: MutableState<Int>,
-    tolerance: MutableState<Int>,
+    progress: MutableState<Float>,
     color: MutableState<Color>,
     gearType: MutableState<GearType>,
     toothDepth: MutableState<Float>,
@@ -129,17 +125,9 @@ private fun ControlPanel(
     ) {
         SliderWithTitle(
             text = "Progress",
-            value = progress.value.toFloat() / 100f,
-            onValueChange = { progress.value = (it * 100f).toInt() },
+            value = progress.value,
+            onValueChange = { progress.value = it },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-        )
-        SliderWithTitle(
-            text = "Progress tolerance",
-            value = tolerance.value.toFloat() / 50f,
-            onValueChange = { tolerance.value = (it * 50f).toInt() },
-            modifier = Modifier
-                .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
 
@@ -283,7 +271,6 @@ fun <T> TwoValueSelector(
 fun Preview() {
     LoadersTheme {
         val progress by remember { mutableFloatStateOf(0.75f) }
-        val tolerance by remember { mutableIntStateOf(10) }
         val minimumRadius by remember { mutableFloatStateOf(12f) }
         val maximumRadius by remember { mutableFloatStateOf(20f) }
         Column(
@@ -299,12 +286,9 @@ fun Preview() {
                 ),
                 toothRoundness = 1f,
                 holeRadius = 4f.dp,
-                gearColor = SolidColor(Color(94, 194, 194, 255)),
+                color = Color(94, 194, 194, 255),
                 gearType = GearType.Square,
-                progressState = ProgressState.Progress(
-                    (progress * 100f).toInt(),
-                    tolerance = tolerance
-                ),
+                progressState = ProgressState.Determinate(progress),
                 modifier = Modifier
                     .width(350.dp)
                     .height(200.dp)

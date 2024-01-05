@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -43,12 +42,15 @@ fun GearsLoader(
     gearConfiguration: GearConfiguration,
     toothRoundness: Float = 1f,
     holeRadius: Dp = 3f.dp,
-    rotationTimeMilliseconds: Int = 500,
-    gearColor: Brush = SolidColor(Color.Gray),
+    rotationTimeMilliseconds: Int = 700,
+    color: Color = Color.Gray,
+    trackColor: Color = Color.LightGray,
     gearType: GearType = GearType.Sharp,
-    progressState: ProgressState = ProgressState.Indefinite,
+    progressState: ProgressState = ProgressState.Indeterminate,
     rectangleFiller: RectangleFiller = RectangleFiller(GearMesher())
 ) {
+    val activeColor = SolidColor(color)
+    val inactiveColor = SolidColor(trackColor)
     var gearConfigurationState by remember { mutableStateOf(gearConfiguration) }
     var size by remember { mutableStateOf(IntSize.Zero) }
     var usedSizeWidth by rememberSaveable { mutableIntStateOf(0) }
@@ -137,17 +139,24 @@ fun GearsLoader(
                     (gear.center.x + gear.radius).dp.toPx().toInt()
                 )
                 if (visibility > 0f) {
-                    val scale = 1.5f - visibility / 2f
                     Gear(
                         modifier = Modifier,
                         gear = gear,
                         rotation = rotation,
                         toothRoundness = toothRoundness,
                         holeRadius = holeRadius,
-                        brush = gearColor,
-                        gearType = gearType,
-                        scale = scale,
-                        alpha = visibility
+                        brush = activeColor,
+                        gearType = gearType
+                    )
+                } else {
+                    Gear(
+                        modifier = Modifier,
+                        gear = gear,
+                        rotation = rotation,
+                        toothRoundness = toothRoundness,
+                        holeRadius = holeRadius,
+                        brush = inactiveColor,
+                        gearType = gearType
                     )
                 }
             }
