@@ -39,8 +39,8 @@ data class Gear(
     fun outerArc(outerRadius: Float): Arc =
         Arc(center, radius + outerRadius, -PI_FLOAT / 2f, PI_FLOAT_2)
 
-    fun contains(point: PointF): Boolean {
-        val distanceFromCenter = center - point
+    fun contains(point: PointF, minus: PointF.(other: PointF) -> PointF = PointF::minus): Boolean {
+        val distanceFromCenter = center.minus(point)
         return distanceFromCenter.x * distanceFromCenter.x +
             distanceFromCenter.y * distanceFromCenter.y <= radius * radius
     }
