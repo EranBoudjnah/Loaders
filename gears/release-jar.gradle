@@ -3,26 +3,27 @@ apply plugin: 'signing'
 
 def gitUrl = 'https://github.com/EranBoudjnah/Loaders.git'
 
-Properties properties = new Properties()
-File propertiesFile = project.rootProject.file("local.properties")
-if (propertiesFile.exists()) {
-    properties.load(propertiesFile.newDataInputStream())
-}
-def pomVersion = project.PUBLISH_VERSION
-def localReleaseDestination = "${layout.buildDirectory.get().asFile}/release/${pomVersion}"
-def ossrhUsername = properties['ossrhUsername']
-def ossrhPassword = properties['ossrhPassword']
+project.afterEvaluate {
+    Properties properties = new Properties()
+    File propertiesFile = project.rootProject.file("local.properties")
+    if (propertiesFile.exists()) {
+        properties.load(propertiesFile.newDataInputStream())
+    }
+    def pomVersion = project.PUBLISH_VERSION
+    println("Version: " + pomVersion)
+    def ossrhUsername = properties['ossrhUsername']
+    def ossrhPassword = properties['ossrhPassword']
 
-nexusPublishing {
-    repositories {
-        sonatype {
-            username = "${ossrhUsername}"
-            password = "${ossrhPassword}"
+    nexusPublishing {
+        repositories {
+            sonatype {
+                username = "${ossrhUsername}"
+                password = "${ossrhPassword}"
+                packageGroup = project.PUBLISH_GROUP_ID
+            }
         }
     }
-}
 
-project.afterEvaluate {
     publishing {
         repositories {
             mavenLocal()
@@ -79,27 +80,4 @@ project.afterEvaluate {
 
     publishMavenPublicationToMavenLocal
             .dependsOn(sourcesJar)
-
-    generateRelease
-            .dependsOn(publishMavenPublicationToSonatypeStagingRepository)
-            .dependsOn(zipRelease)
-}
-
-tasks.register('zipRelease', Zip) {
-    from localReleaseDestination
-    setDestinationDirectory layout.buildDirectory.get().asFile
-    setArchiveFileName "release-${pomVersion}.zip"
-}
-
-tasks.register('generateRelease') {
-    doLast {
-        println "Release ${pomVersion} can be found at ${localReleaseDestination}/"
-        println "Release ${pomVersion} zipped can be found ${layout.buildDirectory.get().asFile}/release-${pomVersion}.zip"
-    }
-}
-
-gradle.taskGraph.whenReady { taskGraph ->
-    if (!taskGraph.hasTask(generateRelease)) {
-        signMavenPublication.enabled = false
-    }
 }
