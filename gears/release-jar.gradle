@@ -1,0 +1,105 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def gitUrl = 'https://github.com/EranBoudjnah/Loaders.git'
+
+Properties properties = new Properties()
+File propertiesFile = project.rootProject.file("local.properties")
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.newDataInputStream())
+}
+def pomVersion = project.PUBLISH_VERSION
+def localReleaseDestination = "${layout.buildDirectory.get().asFile}/release/${pomVersion}"
+def ossrhUsername = properties['ossrhUsername']
+def ossrhPassword = properties['ossrhPassword']
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = "${ossrhUsername}"
+            password = "${ossrhPassword}"
+        }
+    }
+}
+
+project.afterEvaluate {
+    publishing {
+        repositories {
+            mavenLocal()
+            maven {
+                name = "SonatypeStaging"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+        }
+
+        publications {
+            maven(MavenPublication) {
+                groupId = project.PUBLISH_GROUP_ID
+                artifactId = project.PUBLISH_ARTIFACT_ID
+                version = pomVersion
+                tasks.getByName("bundleReleaseAar").outputs.files.forEach {
+                    artifact(it)
+                }
+                artifact(sourcesJar)
+
+                pom {
+                    name = project.PUBLISH_ARTIFACT_ID
+                    description = 'Gears Loader.'
+                    url = gitUrl
+                    licenses {
+                        license {
+                            name = 'MIT'
+                            url = 'https://github.com/EranBoudjnah/Loaders/blob/master/LICENSE'
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = gitUrl
+                    }
+                    developers {
+                        developer {
+                            id = "EranBoudjnah"
+                            name = "Eran Boudjnah"
+                            email = "eranbou+loaders@gmail.com"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.maven
+    }
+
+    publishMavenPublicationToMavenLocal
+            .dependsOn(sourcesJar)
+
+    generateRelease
+            .dependsOn(publishMavenPublicationToSonatypeStagingRepository)
+            .dependsOn(zipRelease)
+}
+
+tasks.register('zipRelease', Zip) {
+    from localReleaseDestination
+    setDestinationDirectory layout.buildDirectory.get().asFile
+    setArchiveFileName "release-${pomVersion}.zip"
+}
+
+tasks.register('generateRelease') {
+    doLast {
+        println "Release ${pomVersion} can be found at ${localReleaseDestination}/"
+        println "Release ${pomVersion} zipped can be found ${layout.buildDirectory.get().asFile}/release-${pomVersion}.zip"
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (!taskGraph.hasTask(generateRelease)) {
+        signMavenPublication.enabled = false
+    }
+}

@@ -74,3 +74,18 @@ android {
         kotlinCompilerExtensionVersion = "1.5.7"
     }
 }
+
+ext {
+    set("PUBLISH_GROUP_ID", "com.mitteloupe.loaders")
+    set("PUBLISH_ARTIFACT_ID", "loaders-gears")
+    set("PUBLISH_VERSION", "0.1.0")
+}
+
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(android.sourceSets.getByName("main").java.srcDirs)
+}
+
+apply {
+    from("release-jar.gradle")
+}
