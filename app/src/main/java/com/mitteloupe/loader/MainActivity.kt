@@ -19,17 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.GearsLoader
+import com.mitteloupe.loader.gears.GearsLoaderDefaults
 import com.mitteloupe.loader.gears.mechanism.sqrt
 import com.mitteloupe.loader.gears.model.GearConfiguration
 import com.mitteloupe.loader.gears.model.GearType
@@ -48,16 +47,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LoadersTheme {
+            LoadersTheme(dynamicColor = false) {
                 val progress = remember { mutableFloatStateOf(.75f) }
-                val color = remember { mutableStateOf(Color(94, 194, 194, 255)) }
+                val defaultColor = GearsLoaderDefaults.color
+                val color = remember { mutableStateOf(defaultColor) }
                 val minimumRadius = remember { mutableFloatStateOf(13f) }
                 val maximumRadius = remember { mutableFloatStateOf(32f) }
-                val gearType = remember { mutableStateOf<GearType>(GearType.Square) }
+                val gearType = remember { mutableStateOf(GearsLoaderDefaults.gearType) }
                 val toothDepth = remember { mutableFloatStateOf(4f) }
                 val toothWidth = remember { mutableFloatStateOf(6f) }
-                val holeRadius = remember { mutableFloatStateOf(4f) }
-                val toothRoundness = remember { mutableFloatStateOf(1f) }
+                val holeRadius =
+                    remember { mutableFloatStateOf(GearsLoaderDefaults.holeRadius.value) }
+                val toothRoundness =
+                    remember { mutableFloatStateOf(GearsLoaderDefaults.TOOTH_ROUNDNESS) }
                 val scrollState = rememberScrollState()
                 Column(
                     modifier = Modifier
@@ -269,7 +271,7 @@ fun <T> TwoValueSelector(
 @Preview
 @Composable
 fun Preview() {
-    LoadersTheme {
+    LoadersTheme(dynamicColor = false) {
         val progress by remember { mutableFloatStateOf(0.75f) }
         val minimumRadius by remember { mutableFloatStateOf(12f) }
         val maximumRadius by remember { mutableFloatStateOf(20f) }
@@ -286,7 +288,7 @@ fun Preview() {
                 ),
                 toothRoundness = 1f,
                 holeRadius = 4f.dp,
-                color = Color(94, 194, 194, 255),
+                color = GearsLoaderDefaults.color,
                 gearType = GearType.Square,
                 progressState = ProgressState.Determinate(progress),
                 modifier = Modifier
