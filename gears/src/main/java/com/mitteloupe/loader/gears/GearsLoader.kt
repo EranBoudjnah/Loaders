@@ -1,14 +1,17 @@
 package com.mitteloupe.loader.gears
 
 import android.graphics.RectF
+import androidx.annotation.FloatRange
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,17 +43,17 @@ import com.mitteloupe.loader.gears.model.ProgressState
 fun GearsLoader(
     modifier: Modifier = Modifier,
     gearConfiguration: GearConfiguration,
-    toothRoundness: Float = 1f,
-    holeRadius: Dp = 3f.dp,
-    rotationTimeMilliseconds: Int = 700,
-    color: Color = Color.Gray,
-    trackColor: Color = Color.LightGray,
-    gearType: GearType = GearType.Sharp,
+    @FloatRange(from = 0.0, to = 1.0) toothRoundness: Float = GearsLoaderDefaults.TOOTH_ROUNDNESS,
+    holeRadius: Dp = GearsLoaderDefaults.holeRadius,
+    rotationTimeMilliseconds: Int = GearsLoaderDefaults.ROTATION_TIME_MILLISECONDS,
+    color: Color = GearsLoaderDefaults.color,
+    trackColor: Color = GearsLoaderDefaults.trackColor,
+    gearType: GearType = GearsLoaderDefaults.gearType,
     progressState: ProgressState = ProgressState.Indeterminate,
     rectangleFiller: RectangleFiller = RectangleFiller(GearMesher())
 ) {
-    val activeColor = SolidColor(color)
-    val inactiveColor = SolidColor(trackColor)
+    val activeBrush = SolidColor(color)
+    val inactiveBrush = SolidColor(trackColor)
     var gearConfigurationState by remember { mutableStateOf(gearConfiguration) }
     var size by remember { mutableStateOf(IntSize.Zero) }
     var usedSizeWidth by rememberSaveable { mutableIntStateOf(0) }
@@ -145,7 +148,7 @@ fun GearsLoader(
                         rotation = rotation,
                         toothRoundness = toothRoundness,
                         holeRadius = holeRadius,
-                        brush = activeColor,
+                        brush = activeBrush,
                         gearType = gearType
                     )
                 } else {
@@ -155,11 +158,27 @@ fun GearsLoader(
                         rotation = rotation,
                         toothRoundness = toothRoundness,
                         holeRadius = holeRadius,
-                        brush = inactiveColor,
+                        brush = inactiveBrush,
                         gearType = gearType
                     )
                 }
             }
         }
     }
+}
+
+object GearsLoaderDefaults {
+    const val TOOTH_ROUNDNESS = 0.3f
+
+    val holeRadius: Dp = 3f.dp
+
+    const val ROTATION_TIME_MILLISECONDS = 700
+
+    val color: Color
+        @ReadOnlyComposable @Composable get() = MaterialTheme.colorScheme.primary
+
+    val trackColor: Color
+        @ReadOnlyComposable @Composable get() = MaterialTheme.colorScheme.surfaceVariant
+
+    val gearType: GearType = GearType.Sharp
 }
