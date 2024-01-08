@@ -12,7 +12,7 @@ interface ProgressState {
     ) : ProgressState {
         override fun stateAtPosition(range: Float, value: Float): Float {
             val relativeValue = progress * range
-            return if (value <= relativeValue) 1f else 0f
+            return if (progress >= 1f || value.safeLesserOrEqual(relativeValue)) 1f else 0f
         }
     }
 }

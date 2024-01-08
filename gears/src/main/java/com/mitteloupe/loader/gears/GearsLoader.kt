@@ -144,8 +144,8 @@ fun GearsLoader(
         gears.forEach { gear ->
             with(LocalDensity.current) {
                 val isActive = progressState.stateAtPosition(
-                    size.width.toDp().value,
-                    (gear.center.x + gear.radius).dp.value
+                    size.width.toFloat(),
+                    gear.center.x.dp.toPx()
                 ) != 0f
 
                 var oldBrush by remember {
