@@ -2,7 +2,9 @@ package com.mitteloupe.loader.gears
 
 import android.graphics.RectF
 import androidx.annotation.FloatRange
+import androidx.compose.animation.core.AnimationConstants.DefaultDurationMillis
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -14,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -50,10 +54,12 @@ fun GearsLoader(
     trackColor: Color = GearsLoaderDefaults.trackColor,
     gearType: GearType = GearsLoaderDefaults.gearType,
     progressState: ProgressState = ProgressState.Indeterminate,
+    transitionTimeMilliseconds: Int = DefaultDurationMillis,
     rectangleFiller: RectangleFiller = RectangleFiller(GearMesher())
 ) {
     val activeBrush = SolidColor(color)
     val inactiveBrush = SolidColor(trackColor)
+    fun Boolean.brush(): Brush = if (this) activeBrush else inactiveBrush
     var gearConfigurationState by remember { mutableStateOf(gearConfiguration) }
     var size by remember { mutableStateOf(IntSize.Zero) }
     var usedSizeWidth by rememberSaveable { mutableIntStateOf(0) }
@@ -137,31 +143,56 @@ fun GearsLoader(
     ) {
         gears.forEach { gear ->
             with(LocalDensity.current) {
-                val visibility = progressState.stateAtPosition(
-                    size.width,
-                    (gear.center.x + gear.radius).dp.toPx().toInt()
-                )
-                if (visibility > 0f) {
+                val isActive = progressState.stateAtPosition(
+                    size.width.toFloat(),
+                    gear.center.x.dp.toPx()
+                ) != 0f
+
+                var oldBrush by remember {
+                    mutableStateOf(isActive.brush())
+                }
+                var alphaState by remember {
+                    mutableFloatStateOf(0f)
+                }
+                var activeState by remember {
+                    mutableStateOf(isActive)
+                }
+                LaunchedEffect(isActive) {
+                    oldBrush = activeState.brush()
+                    activeState = isActive
+                    alphaState = 0f
+                    animate(
+                        initialValue = 0f,
+                        targetValue = 1f,
+                        animationSpec = tween(
+                            durationMillis = transitionTimeMilliseconds,
+                            easing = LinearEasing
+                        )
+                    ) { value, _ ->
+                        alphaState = value
+                    }
+                }
+
+                if (alphaState < 1.0f) {
                     Gear(
-                        modifier = Modifier,
                         gear = gear,
                         rotation = rotation,
                         toothRoundness = toothRoundness,
                         holeRadius = holeRadius,
-                        brush = activeBrush,
-                        gearType = gearType
-                    )
-                } else {
-                    Gear(
-                        modifier = Modifier,
-                        gear = gear,
-                        rotation = rotation,
-                        toothRoundness = toothRoundness,
-                        holeRadius = holeRadius,
-                        brush = inactiveBrush,
+                        brush = oldBrush,
                         gearType = gearType
                     )
                 }
+
+                Gear(
+                    gear = gear,
+                    rotation = rotation,
+                    toothRoundness = toothRoundness,
+                    holeRadius = holeRadius,
+                    brush = activeState.brush(),
+                    gearType = gearType,
+                    alpha = alphaState
+                )
             }
         }
     }

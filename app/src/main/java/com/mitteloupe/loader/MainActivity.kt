@@ -3,8 +3,10 @@ package com.mitteloupe.loader
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -64,7 +67,8 @@ class MainActivity : ComponentActivity() {
                 Column(
                     modifier = Modifier
                         .verticalScroll(scrollState)
-                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface)
                 ) {
                     GearsLoader(
                         gearConfiguration = GearConfiguration(
@@ -174,7 +178,7 @@ private fun ControlPanel(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        TwoValueSelector("Square" to GearType.Square, "Sharp" to GearType.Sharp, gearType)
+        TwoValueSelector(gearType, "Square" to GearType.Square, "Sharp" to GearType.Sharp)
         SliderWithTitle(
             text = "Tooth depth",
             value = toothDepth.value / MAXIMAL_RADIUS_VALUE,
@@ -224,11 +228,13 @@ private fun SliderWithTitle(
     text: String,
     value: Float,
     onValueChange: (Float) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Column(modifier) {
         Text(
             text = text,
+            color = color,
             modifier = Modifier.padding(8.dp, 0.dp)
         )
         Slider(
@@ -240,30 +246,23 @@ private fun SliderWithTitle(
 
 @Composable
 fun <T> TwoValueSelector(
-    option1: Pair<String, T>,
-    option2: Pair<String, T>,
-    selectedOption: MutableState<T>
+    selectedOption: MutableState<T>,
+    vararg options: Pair<String, T>,
+    color: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Column {
-        Row {
-            RadioButton(
-                selected = selectedOption.value == option1.second,
-                onClick = { selectedOption.value = option1.second }
-            )
-            Text(
-                text = option1.first,
-                modifier = Modifier.padding(0.dp, 12.dp)
-            )
-        }
-        Row {
-            RadioButton(
-                selected = selectedOption.value == option2.second,
-                onClick = { selectedOption.value = option2.second }
-            )
-            Text(
-                text = option2.first,
-                modifier = Modifier.padding(0.dp, 12.dp)
-            )
+        options.forEach { option ->
+            Row {
+                RadioButton(
+                    selected = selectedOption.value == option.second,
+                    onClick = { selectedOption.value = option.second }
+                )
+                Text(
+                    text = option.first,
+                    color = color,
+                    modifier = Modifier.padding(0.dp, 12.dp)
+                )
+            }
         }
     }
 }

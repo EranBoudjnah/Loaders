@@ -51,10 +51,10 @@ internal fun Gear(
         derivedStateOf {
             with(currentDensity) {
                 Path().apply {
-                    val radiusPx = (gear.radius.dp).toPx()
+                    val radiusPx = gear.radius.dp.toPx()
                     val toothDepthPx = gear.toothDepth.dp.toPx()
                     val innerRadius = radiusPx - toothDepthPx
-                    val centerPx = (gear.radius.dp).toPx()
+                    val centerPx = gear.radius.dp.toPx()
                     when (gearType) {
                         GearType.Sharp -> {
                             (0 until numberOfTeeth).forEach { toothIndex ->
