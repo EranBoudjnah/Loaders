@@ -46,7 +46,7 @@ import com.mitteloupe.loader.gears.model.ProgressState
 @Composable
 fun GearsLoader(
     modifier: Modifier = Modifier,
-    gearConfiguration: GearConfiguration,
+    gearConfiguration: GearConfiguration = GearsLoaderDefaults.gearConfiguration,
     @FloatRange(from = 0.0, to = 1.0) toothRoundness: Float = GearsLoaderDefaults.TOOTH_ROUNDNESS,
     holeRadius: Dp = GearsLoaderDefaults.holeRadius,
     rotationTimeMilliseconds: Int = GearsLoaderDefaults.ROTATION_TIME_MILLISECONDS,
@@ -199,6 +199,14 @@ fun GearsLoader(
 }
 
 object GearsLoaderDefaults {
+    val gearConfiguration = GearConfiguration(
+        overflow = false,
+        minimumRadius = 10f.dp,
+        maximumRadius = 32f.dp,
+        toothDepth = 2.5f.dp,
+        toothWidth = 6f.dp
+    )
+
     const val TOOTH_ROUNDNESS = 0.3f
 
     val holeRadius: Dp = 3f.dp
@@ -211,5 +219,5 @@ object GearsLoaderDefaults {
     val trackColor: Color
         @ReadOnlyComposable @Composable get() = MaterialTheme.colorScheme.surfaceVariant
 
-    val gearType: GearType = GearType.Sharp
+    val gearType: GearType = GearType.Square
 }

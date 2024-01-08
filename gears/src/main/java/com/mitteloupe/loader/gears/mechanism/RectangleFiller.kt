@@ -5,8 +5,6 @@ import android.graphics.RectF
 import com.mitteloupe.loader.gears.model.Arc
 import com.mitteloupe.loader.gears.model.Gear
 import kotlin.math.cos
-import kotlin.math.max
-import kotlin.math.round
 import kotlin.math.sin
 import kotlin.random.Random
 
@@ -65,17 +63,22 @@ class RectangleFiller(
         toothWidth: Float,
         toothDepth: Float,
         relativePosition: Float = randomFloatGenerator(),
-        nextRadius: Float = randomGearSize(minimumRadius, maximumRadius, toothWidth)
+        nextRadius: Float = randomGearSize(minimumRadius, maximumRadius, toothWidth, toothDepth)
     ): Boolean {
         updateIntersectionRectForRadius(rectangle, nextRadius)
         if (intersectionRect.isEmpty) return false
 
         val arcsInRect = originGear.outerArc(nextRadius - toothDepth * .75f)
             .intersectionWithRectangle(intersectionRect)
-        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius + 1f)
+        val validNextPoints = validArcs(originGear, arcsInRect, nextRadius)
 
         if (validNextPoints.isEmpty()) {
-            if (nextRadius > minimumRadius) {
+            val smallerRadius = nextRadius.subtractTooth(
+                toothWidth = toothWidth,
+                toothDepth = toothDepth
+            )
+            println("Trying smallerRadiuS $smallerRadius ($nextRadius)")
+            if (smallerRadius >= minimumRadius) {
                 return addGear(
                     originGear = originGear,
                     rectangle = rectangle,
@@ -84,7 +87,7 @@ class RectangleFiller(
                     toothWidth = toothWidth,
                     toothDepth = toothDepth,
                     relativePosition = relativePosition,
-                    nextRadius = max(minimumRadius, nextRadius - toothWidth)
+                    nextRadius = smallerRadius
                 )
             }
             return false
@@ -106,7 +109,12 @@ class RectangleFiller(
                 )
             )
         } ?: run {
-            if (nextRadius > minimumRadius) {
+            val smallerRadius = nextRadius.subtractTooth(
+                toothWidth = toothWidth,
+                toothDepth = toothDepth
+            )
+            println("Trying smallerRadius $smallerRadius ($nextRadius)")
+            if (smallerRadius >= minimumRadius) {
                 return addGear(
                     originGear = originGear,
                     rectangle = rectangle,
@@ -115,7 +123,7 @@ class RectangleFiller(
                     toothWidth = toothWidth,
                     toothDepth = toothDepth,
                     relativePosition = relativePosition,
-                    nextRadius = max(minimumRadius, nextRadius - toothWidth)
+                    nextRadius = smallerRadius
                 )
             }
 
@@ -143,7 +151,7 @@ class RectangleFiller(
         } else {
             validArcs(originGear, arcsInRect, minimumRadius)
         }
-        return remainingNextPoints.any { it.length >= .1f }
+        return remainingNextPoints.any { it.length >= .01f }
     }
 
     private fun updateIntersectionRectForRadius(rectangle: RectF, minimumRadius: Float) {
@@ -158,7 +166,8 @@ class RectangleFiller(
     ) = filter { currentGear ->
         currentGear != originGear
     }.fold(arcsInRect) { arcs, currentGear ->
-        val validGear = currentGear.outerRadius(distanceToNewGear)
+        val meshingSpacing = if (originGear.isClockwise == currentGear.isClockwise) 1f else 0f
+        val validGear = currentGear.outerRadius(distanceToNewGear + meshingSpacing)
         arcs.flatMap { currentArc ->
             currentArc.subtractGear(validGear)
         }
@@ -173,7 +182,8 @@ class RectangleFiller(
     ): Gear = randomGearSize(
         minimumRadius = minimumGearRadius,
         maximumRadius = maximumGearRadius,
-        toothWidth = toothWidth
+        toothWidth = toothWidth,
+        toothDepth = toothDepth
     ).let { radius ->
         Gear(
             center = PointF(
@@ -223,20 +233,26 @@ class RectangleFiller(
     private fun randomGearSize(
         minimumRadius: Float,
         maximumRadius: Float,
-        toothWidth: Float
+        toothWidth: Float,
+        toothDepth: Float
     ): Float {
         val seedRadius = randomFloatGenerator() * (maximumRadius - minimumRadius) + minimumRadius
-        val seedDiameter = seedRadius * 2f
-        var numberOfTeeth = (seedDiameter / toothWidth).toInt()
-        if (seedDiameter / toothWidth != numberOfTeeth.toFloat()) {
-            numberOfTeeth = round(seedDiameter / toothWidth).toInt()
-        }
-        var resultRadius = (numberOfTeeth * toothWidth) / 2f
-        if (resultRadius < minimumRadius) {
-            resultRadius += toothWidth
-        } else if (resultRadius > maximumRadius) {
+        val numberOfTeeth = numberOfTeeth(toothWidth, seedRadius, toothDepth)
+        var resultRadius = gearRadius(toothWidth, toothDepth, numberOfTeeth)
+        if (resultRadius > maximumRadius) {
             resultRadius -= toothWidth
         }
+        while (resultRadius < minimumRadius) {
+            resultRadius += toothWidth
+        }
         return resultRadius
+    }
+
+    private fun gearRadius(toothWidth: Float, toothDepth: Float, numberOfTeeth: Int) =
+        toothWidth / (sin(PI_FLOAT / numberOfTeeth) * 2f) + toothDepth
+
+    private fun Float.subtractTooth(toothWidth: Float, toothDepth: Float): Float {
+        val numberOfTeeth = numberOfTeeth(toothWidth, this, toothDepth)
+        return gearRadius(toothWidth, toothDepth, numberOfTeeth - 1)
     }
 }
