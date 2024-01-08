@@ -1,25 +1,18 @@
 package com.mitteloupe.loader.gears.model
 
 interface ProgressState {
-    fun stateAtPosition(range: Int, value: Int): Float
+    fun stateAtPosition(range: Float, value: Float): Float
 
     data object Indeterminate : ProgressState {
-        override fun stateAtPosition(range: Int, value: Int): Float = 1f
+        override fun stateAtPosition(range: Float, value: Float): Float = 1f
     }
 
     data class Determinate(
-        val progress: Float,
-        val tolerance: Float = 0f
+        val progress: Float
     ) : ProgressState {
-        override fun stateAtPosition(range: Int, value: Int): Float {
-            val floatRange = range.toFloat()
-            val relativeValue = progress * floatRange
-            val relativeTolerance = tolerance * floatRange
-            return when {
-                value <= relativeValue -> 1f
-                value > relativeValue + relativeTolerance -> 0f
-                else -> 1f - (value - relativeValue) / relativeTolerance
-            }
+        override fun stateAtPosition(range: Float, value: Float): Float {
+            val relativeValue = progress * range
+            return if (value <= relativeValue) 1f else 0f
         }
     }
 }
