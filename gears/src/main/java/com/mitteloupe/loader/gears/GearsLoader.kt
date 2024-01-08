@@ -201,9 +201,9 @@ fun GearsLoader(
 object GearsLoaderDefaults {
     val gearConfiguration = GearConfiguration(
         overflow = false,
-        minimumRadius = 13f.dp,
-        maximumRadius = 64f.dp,
-        toothDepth = 3f.dp,
+        minimumRadius = 10f.dp,
+        maximumRadius = 32f.dp,
+        toothDepth = 2.5f.dp,
         toothWidth = 6f.dp
     )
 
