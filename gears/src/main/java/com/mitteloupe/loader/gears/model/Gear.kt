@@ -20,6 +20,7 @@ data class Gear(
 ) : Circular, Parcelable {
     @IgnoredOnParcel
     val teethCount = numberOfTeeth(toothWidth, radius, toothDepth)
+
     @IgnoredOnParcel
     val relativeSpeed = if (isClockwise) {
         1f / teethCount

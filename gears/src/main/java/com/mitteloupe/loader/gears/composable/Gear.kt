@@ -25,7 +25,6 @@ import com.mitteloupe.loader.gears.model.Gear
 import com.mitteloupe.loader.gears.model.GearType
 import kotlin.math.cos
 import kotlin.math.min
-import kotlin.math.pow
 import kotlin.math.sin
 
 private const val FLOAT_INACCURACY_CORRECTION = .999999f

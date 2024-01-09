@@ -214,10 +214,14 @@ object GearsLoaderDefaults {
     const val ROTATION_TIME_MILLISECONDS = 700
 
     val color: Color
-        @ReadOnlyComposable @Composable get() = MaterialTheme.colorScheme.primary
+        @ReadOnlyComposable
+        @Composable
+        get() = MaterialTheme.colorScheme.primary
 
     val trackColor: Color
-        @ReadOnlyComposable @Composable get() = MaterialTheme.colorScheme.surfaceVariant
+        @ReadOnlyComposable
+        @Composable
+        get() = MaterialTheme.colorScheme.surfaceVariant
 
     val gearType: GearType = GearType.Square
 }

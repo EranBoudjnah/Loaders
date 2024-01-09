@@ -10,7 +10,6 @@ project.afterEvaluate {
         properties.load(propertiesFile.newDataInputStream())
     }
     def pomVersion = project.PUBLISH_VERSION
-    println("Version: " + pomVersion)
     def ossrhUsername = properties['ossrhUsername']
     def ossrhPassword = properties['ossrhPassword']
 
