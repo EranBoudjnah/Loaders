@@ -88,6 +88,7 @@ class GearTest {
     }
 
     @Test
+    @Suppress("ktlint:standard:max-line-length")
     fun `Given radius delta when outerArc then returns full arc at gear center with extended radius`() {
         // Given
         val givenRadiusDelta = 16f

@@ -183,7 +183,6 @@ private fun ControlPanel(
                 onValueChange = {
                     maximumRadius.value =
                         max(minimumRadius.value, it * MAXIMAL_RADIUS_VALUE + MINIMAL_RADIUS_VALUE)
-println("${minimumRadius.value} - ${maximumRadius.value}")
                 },
                 modifier = Modifier.fillMaxWidth()
             )
