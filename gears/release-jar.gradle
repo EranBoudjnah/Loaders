@@ -82,7 +82,7 @@ project.afterEvaluate {
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-    if (!taskGraph.hasTask(generateRelease)) {
+    if (!taskGraph.hasTask(publishMavenPublicationToSonatypeStagingRepository)) {
         signMavenPublication.enabled = false
     }
 }
