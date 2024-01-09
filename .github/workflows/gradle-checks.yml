@@ -33,7 +33,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Assemble with Gradle
-        run: ./gradlew jar --no-daemon
+        run: ./gradlew :app:preDebugBuild :app:preReleaseBuild :gears:preDebugBuild :gears:preReleaseBuild --no-daemon
 
   unit-tests:
     needs: setup
@@ -63,7 +63,7 @@ jobs:
         run: ./gradlew gears:assemble
 
       - name: Publish to local maven
-        run: ./gradlew gears:publishToMavenLocal
+        run: ./gradlew :gears:publishToMavenLocal
 
       - name: Run unit tests
         run: ./gradlew test
@@ -93,10 +93,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Assemble
-        run: ./gradlew app:assemble gears:assemble
+        run: ./gradlew :app:assemble :gears:assemble
 
       - name: Publish to local maven
-        run: ./gradlew gears:publishToMavenLocal
+        run: ./gradlew :gears:publishToMavenLocal
 
       - name: Run lint
         run: ./gradlew lint --no-daemon

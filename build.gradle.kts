@@ -15,10 +15,10 @@ configure<KtlintExtension> {
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
-}
 
-tasks.withType(Test::class) {
-    testLogging {
-        events("passed", "skipped", "failed")
+    tasks.withType(Test::class) {
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
     }
 }
