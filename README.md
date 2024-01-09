@@ -2,7 +2,8 @@
 
 A collection of progress indicators/loaders for Jetpack Compose
 
-![Maven Central](https://img.shields.io/maven-central/v/com.mitteloupe.loaders/loaders-gears?label=Gears%20on%20maven-central)
+[![Gradle checks](https://github.com/EranBoudjnah/Loaders/actions/workflows/gradle-checks.yml/badge.svg)](https://github.com/EranBoudjnah/Loaders/actions/workflows/gradle-checks.yml)
+![Gears - Maven Central](https://img.shields.io/maven-central/v/com.mitteloupe.loaders/loaders-gears?label=Gears%20on%20maven-central)
 
 <img src="https://github.com/EranBoudjnah/Loaders/blob/ca0d8f703f6b809b02beeeae5696fc5232f54e3b/Assets/main_demo.gif" width="320" height="600" />
 
