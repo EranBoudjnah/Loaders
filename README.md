@@ -16,7 +16,7 @@ dependencies {
 }
 ```
 
-## Usage
+### Usage
 
 ```kotlin
 GearsLoader()
@@ -40,6 +40,16 @@ fun GearsLoader(
 )
 ```
 
-## Show some ❤ and support
+### Show some ❤ and support
 
 If this project helped you, give it a ⭐️!
+
+### Contributing
+
+Contributions to this project are welcome. Please feel free to report any issues or fork to
+make changes and raise a pull request.
+
+### Licence
+
+This project is distributed under the terms of the MIT License. See [LICENSE.md](LICENSE) for
+details.
