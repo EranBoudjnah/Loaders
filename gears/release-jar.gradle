@@ -80,3 +80,9 @@ project.afterEvaluate {
     publishMavenPublicationToMavenLocal
             .dependsOn(sourcesJar)
 }
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (!taskGraph.hasTask(generateRelease)) {
+        signMavenPublication.enabled = false
+    }
+}
