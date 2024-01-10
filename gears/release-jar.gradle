@@ -9,19 +9,10 @@ project.afterEvaluate {
     if (propertiesFile.exists()) {
         properties.load(propertiesFile.newDataInputStream())
     }
-    def pomVersion = project.PUBLISH_VERSION
     def ossrhUsername = properties['ossrhUsername']
     def ossrhPassword = properties['ossrhPassword']
+    def pomVersion = project.PUBLISH_VERSION
 
-    nexusPublishing {
-        repositories {
-            sonatype {
-                username = "${ossrhUsername}"
-                password = "${ossrhPassword}"
-                packageGroup = project.PUBLISH_GROUP_ID
-            }
-        }
-    }
 
     publishing {
         repositories {

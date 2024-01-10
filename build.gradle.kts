@@ -1,3 +1,4 @@
+import java.util.*
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
@@ -19,6 +20,26 @@ subprojects {
     tasks.withType(Test::class) {
         testLogging {
             events("passed", "skipped", "failed")
+        }
+    }
+}
+
+val properties = Properties()
+val propertiesFile = project.rootProject.file("local.properties")
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.inputStream())
+}
+val ossrhUsername = properties["ossrhUsername"]
+val ossrhPassword = properties["ossrhPassword"]
+
+extra.set("PUBLISH_GROUP_ID", "com.mitteloupe.loaders")
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = "$ossrhUsername"
+            password = "$ossrhPassword"
+            packageGroup.set("${project.extra["PUBLISH_GROUP_ID"]}")
         }
     }
 }

@@ -76,7 +76,6 @@ android {
 }
 
 ext {
-    set("PUBLISH_GROUP_ID", "com.mitteloupe.loaders")
     set("PUBLISH_ARTIFACT_ID", "loaders-gears")
     set("PUBLISH_VERSION", "0.2.0")
 }
