@@ -10,7 +10,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":trigonometry"))
                 implementation(
                     project.dependencies.platform("androidx.compose:compose-bom:2023.10.01")
                 )
@@ -42,7 +41,7 @@ dependencies {
 }
 
 android {
-    namespace = "com.mitteloupe.loader.gears"
+    namespace = "com.mitteloupe.loader.trigonometry"
     compileSdk = 34
 
     defaultConfig {
@@ -74,18 +73,4 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
     }
-}
-
-ext {
-    set("PUBLISH_ARTIFACT_ID", "loaders-gears")
-    set("PUBLISH_VERSION", "0.2.0")
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(android.sourceSets.getByName("main").java.srcDirs)
-}
-
-apply {
-    from("release-jar.gradle")
 }

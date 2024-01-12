@@ -42,7 +42,7 @@ dependencies {
 }
 
 android {
-    namespace = "com.mitteloupe.loader.gears"
+    namespace = "com.mitteloupe.loader.jigsaw"
     compileSdk = 34
 
     defaultConfig {
@@ -77,8 +77,8 @@ android {
 }
 
 ext {
-    set("PUBLISH_ARTIFACT_ID", "loaders-gears")
-    set("PUBLISH_VERSION", "0.2.0")
+    set("PUBLISH_ARTIFACT_ID", "loaders-jigsaw")
+    set("PUBLISH_VERSION", "0.1.0")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {

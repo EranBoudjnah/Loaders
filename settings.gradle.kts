@@ -16,4 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Loaders"
 include(":app")
+include(":trigonometry")
 include(":gears")
+include(":jigsaw")

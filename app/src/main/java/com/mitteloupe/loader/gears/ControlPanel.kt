@@ -53,6 +53,7 @@ fun ControlPanel(
             value = progress.value,
             onValueChange = { progress.value = it },
             modifier = Modifier
+                .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
 

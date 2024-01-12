@@ -2,9 +2,15 @@ package com.mitteloupe.loader.gears.model
 
 import android.graphics.PointF
 import android.graphics.RectF
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
-import com.mitteloupe.loader.gears.mechanism.atan2
-import com.mitteloupe.loader.gears.mechanism.distance
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_2
+import com.mitteloupe.loader.trigonometry.PRECISION_CORRECTION
+import com.mitteloupe.loader.trigonometry.atan2
+import com.mitteloupe.loader.trigonometry.distance
+import com.mitteloupe.loader.trigonometry.safeGreater
+import com.mitteloupe.loader.trigonometry.safeGreaterOrEqual
+import com.mitteloupe.loader.trigonometry.safeIn
+import com.mitteloupe.loader.trigonometry.safeLesser
+import com.mitteloupe.loader.trigonometry.safeLesserOrEqual
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
