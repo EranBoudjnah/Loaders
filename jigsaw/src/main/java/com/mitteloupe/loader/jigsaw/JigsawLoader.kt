@@ -444,9 +444,12 @@ private fun Path.pieceEdge(
         PointF(length * knobConfiguration.knobBaseStart, knobMidDistance * invertedMultiplier)
     )
     cubicTo(
-        offsetX + startControlPoint1.x, offsetY + startControlPoint1.y,
-        offsetX + startControlPoint2.x, offsetY + startControlPoint2.y,
-        offsetX + knobBaseStartPoint.x, offsetY + knobBaseStartPoint.y
+        offsetX + startControlPoint1.x,
+        offsetY + startControlPoint1.y,
+        offsetX + startControlPoint2.x,
+        offsetY + startControlPoint2.y,
+        offsetX + knobBaseStartPoint.x,
+        offsetY + knobBaseStartPoint.y
     )
 
     val knobTopDistance = -pieceHeight * knobConfiguration.knobEndDistanceRatio
@@ -466,9 +469,12 @@ private fun Path.pieceEdge(
         )
     )
     cubicTo(
-        offsetX + knobControlPoint1.x, offsetY + knobControlPoint1.y,
-        offsetX + knobControlPoint2.x, offsetY + knobControlPoint2.y,
-        offsetX + knobBaseEndPoint.x, offsetY + knobBaseEndPoint.y
+        offsetX + knobControlPoint1.x,
+        offsetY + knobControlPoint1.y,
+        offsetX + knobControlPoint2.x,
+        offsetY + knobControlPoint2.y,
+        offsetX + knobBaseEndPoint.x,
+        offsetY + knobBaseEndPoint.y
     )
 
     val endControlPoint1 = orientation.oriented(
@@ -485,9 +491,12 @@ private fun Path.pieceEdge(
     )
     val endPoint = orientation.oriented(PointF(length, 0f))
     cubicTo(
-        offsetX + endControlPoint1.x, offsetY + endControlPoint1.y,
-        offsetX + endControlPoint2.x, offsetY + endControlPoint2.y,
-        offsetX + endPoint.x, offsetY + endPoint.y
+        offsetX + endControlPoint1.x,
+        offsetY + endControlPoint1.y,
+        offsetX + endControlPoint2.x,
+        offsetY + endControlPoint2.y,
+        offsetX + endPoint.x,
+        offsetY + endPoint.y
     )
 }
 

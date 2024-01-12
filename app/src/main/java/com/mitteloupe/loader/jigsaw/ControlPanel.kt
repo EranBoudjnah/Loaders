@@ -81,7 +81,7 @@ fun ControlPanel(
             onValueChange = {
                 verticalPieces.value =
                     (it * (MAXIMUM_VERTICAL_PIECES - MINIMUM_VERTICAL_PIECES).toFloat()).toInt() +
-                        MINIMUM_VERTICAL_PIECES
+                    MINIMUM_VERTICAL_PIECES
             },
             modifier = Modifier
                 .width(350.dp)

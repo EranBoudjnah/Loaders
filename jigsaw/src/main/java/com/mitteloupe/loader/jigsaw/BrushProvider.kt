@@ -23,12 +23,11 @@ sealed interface BrushProvider {
 
     data class ColorBrushProvider(private val color: Color) : BrushProvider {
         @Composable
-        override fun invoke(targetComposableSize: IntSize) =
-            SolidColor(color)
+        override fun invoke(targetComposableSize: IntSize) = SolidColor(color)
     }
 
     data class ImageResourceBrushProvider(
-        @DrawableRes private val resourceId: Int,
+        @DrawableRes private val resourceId: Int
     ) : BrushProvider {
         @Composable
         override fun invoke(targetComposableSize: IntSize): Brush {

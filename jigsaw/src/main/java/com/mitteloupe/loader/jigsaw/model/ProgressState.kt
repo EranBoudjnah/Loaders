@@ -48,13 +48,8 @@ interface ProgressState {
             return false
         }
 
-        private fun isOnEdge(
-            x: Int,
-            y: Int,
-            horizontalPieces: Int,
-            verticalPieces: Int
-        ): Boolean = x == 0 || y == 0 ||
-            x == horizontalPieces - 1 || y == verticalPieces + 1
+        private fun isOnEdge(x: Int, y: Int, horizontalPieces: Int, verticalPieces: Int): Boolean =
+            x == 0 || y == 0 || x == horizontalPieces - 1 || y == verticalPieces + 1
 
         private fun isActive(
             x: Int,
