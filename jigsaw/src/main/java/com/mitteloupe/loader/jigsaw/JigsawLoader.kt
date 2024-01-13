@@ -41,14 +41,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.jigsaw.BrushProvider.ColorBrushProvider
+import com.mitteloupe.loader.jigsaw.PiecePresenceResolver.IndeterminatePiecePresenceResolver
+import com.mitteloupe.loader.jigsaw.PiecePresenceResolver.ProgressPiecePresenceResolver
 import com.mitteloupe.loader.jigsaw.model.KnobConfiguration
 import com.mitteloupe.loader.jigsaw.model.ProgressState
+import com.mitteloupe.loader.jigsaw.model.ProgressState.Indeterminate
 import kotlin.random.Random
+import kotlinx.coroutines.delay
 
 @Composable
 fun JigsawLoader(
     modifier: Modifier = Modifier,
-    progressState: ProgressState = ProgressState.Indeterminate,
+    progressState: ProgressState = Indeterminate(),
     horizontalPieces: Int = JigsawLoaderDefaults.horizontalPieces,
     verticalPieces: Int = JigsawLoaderDefaults.verticalPieces,
     puzzleBrushProvider: BrushProvider =
@@ -56,15 +60,23 @@ fun JigsawLoader(
     lightBrush: Brush = SolidColor(Color.White.copy(alpha = .4f)),
     darkBrush: Brush = SolidColor(Color.Black.copy(alpha = .6f)),
     trackColor: Color = JigsawLoaderDefaults.trackColor,
-    piecePresent: (x: Int, y: Int) -> Boolean = { x, y ->
-        progressState.stateAtPosition(x, y, horizontalPieces, verticalPieces)
-    },
+    piecePresenceResolver: PiecePresenceResolver = JigsawLoaderDefaults.piecePresenceResolver(
+        progressState = progressState,
+        horizontalPieces = horizontalPieces,
+        verticalPieces = verticalPieces
+    ),
     transitionTimeMilliseconds: Int = AnimationConstants.DefaultDurationMillis,
     @FloatRange(from = 0.0, to = 1.0) trackSaturation: Float = 1f,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean =
         JigsawLoaderDefaults.knobInversionEvaluator,
     knobConfiguration: KnobConfiguration = JigsawLoaderDefaults.knobConfiguration
 ) {
+    var activePiecePresenceResolver by remember {
+        mutableStateOf(piecePresenceResolver)
+    }
+    if (piecePresenceResolver != activePiecePresenceResolver) {
+        activePiecePresenceResolver = piecePresenceResolver
+    }
     var size by remember { mutableStateOf(IntSize.Zero) }
     val pieceWidth by remember(horizontalPieces) {
         derivedStateOf {
@@ -76,7 +88,28 @@ fun JigsawLoader(
             size.height.toFloat() / verticalPieces.toFloat()
         }
     }
-    val lightPath by remember(horizontalPieces, verticalPieces, progressState, knobConfiguration) {
+
+    var presenceState by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(activePiecePresenceResolver, progressState) {
+        if (progressState is Indeterminate) {
+            while (true) {
+                activePiecePresenceResolver.iterate()
+                presenceState = !presenceState
+                delay(progressState.intervalMilliseconds)
+            }
+        }
+    }
+
+    val lightPath by remember(
+        horizontalPieces,
+        verticalPieces,
+        progressState,
+        knobConfiguration,
+        presenceState
+    ) {
         derivedStateOf {
             Path().apply {
                 addAllPiecesTopLeft(
@@ -84,14 +117,14 @@ fun JigsawLoader(
                     horizontalPieces = horizontalPieces,
                     pieceWidth = pieceWidth,
                     pieceHeight = pieceHeight,
-                    piecePresent = piecePresent,
+                    piecePresenceResolver = activePiecePresenceResolver,
                     knobInversionEvaluator = knobInversionEvaluator,
                     knobConfiguration = knobConfiguration
                 )
             }
         }
     }
-    val darkPath by remember(horizontalPieces, verticalPieces, progressState, knobConfiguration) {
+    val darkPath by remember(lightPath) {
         derivedStateOf {
             Path().apply {
                 addAllPiecesBottomRight(
@@ -99,7 +132,7 @@ fun JigsawLoader(
                     verticalPieces = verticalPieces,
                     pieceWidth = pieceWidth,
                     pieceHeight = pieceHeight,
-                    piecePresent = piecePresent,
+                    piecePresenceResolver = activePiecePresenceResolver,
                     knobInversionEvaluator = knobInversionEvaluator,
                     knobConfiguration = knobConfiguration
                 )
@@ -138,7 +171,7 @@ fun JigsawLoader(
 
         repeat(verticalPieces) { y ->
             repeat(horizontalPieces) { x ->
-                val isActive = piecePresent(x, y)
+                val isActive = activePiecePresenceResolver.piecePresent(x, y)
                 var activeState by remember {
                     mutableStateOf(isActive)
                 }
@@ -165,9 +198,9 @@ fun JigsawLoader(
                 }
 
                 if (alphaState != 0f) {
-                    Canvas(modifier = Modifier.matchParentSize()) {
-                        drawPath(
-                            path = Path().apply {
+                    val path by remember(lightPath) {
+                        mutableStateOf(
+                            Path().apply {
                                 piece(
                                     left = pieceWidth * x,
                                     top = pieceHeight * y,
@@ -180,7 +213,12 @@ fun JigsawLoader(
                                     knobInversionEvaluator = knobInversionEvaluator,
                                     knobConfiguration = knobConfiguration
                                 )
-                            },
+                            }
+                        )
+                    }
+                    Canvas(modifier = Modifier.matchParentSize()) {
+                        drawPath(
+                            path = path,
                             brush = imageBrush,
                             alpha = alphaState,
                             style = Fill
@@ -214,13 +252,13 @@ private fun Path.addAllPiecesTopLeft(
     verticalPieces: Int,
     pieceWidth: Float,
     pieceHeight: Float,
-    piecePresent: (x: Int, y: Int) -> Boolean,
+    piecePresenceResolver: PiecePresenceResolver,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean,
     knobConfiguration: KnobConfiguration
 ) {
     repeat(verticalPieces) { y ->
         repeat(horizontalPieces) { x ->
-            if (piecePresent(x, y)) {
+            if (piecePresenceResolver.piecePresent(x, y)) {
                 pieceTopLeft(
                     left = pieceWidth * x + 1f,
                     top = pieceHeight * y + 1f,
@@ -281,13 +319,13 @@ private fun Path.addAllPiecesBottomRight(
     verticalPieces: Int,
     pieceWidth: Float,
     pieceHeight: Float,
-    piecePresent: (x: Int, y: Int) -> Boolean,
+    piecePresenceResolver: PiecePresenceResolver,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean,
     knobConfiguration: KnobConfiguration
 ) {
     repeat(verticalPieces) { y ->
         repeat(horizontalPieces) { x ->
-            if (piecePresent(x, y)) {
+            if (piecePresenceResolver.piecePresent(x, y)) {
                 pieceBottomRight(
                     left = pieceWidth * x - 1f,
                     top = pieceHeight * y - 1f,
@@ -535,6 +573,22 @@ object JigsawLoaderDefaults {
         knobMidDistanceRatio = .155f,
         knobEndDistanceRatio = .16f
     )
+
+    val indeterminatePiecePresenceThreshold = .15f
+
+    fun piecePresenceResolver(
+        progressState: ProgressState,
+        horizontalPieces: Int,
+        verticalPieces: Int
+    ): PiecePresenceResolver = if (progressState is Indeterminate) {
+        IndeterminatePiecePresenceResolver(indeterminatePiecePresenceThreshold)
+    } else {
+        ProgressPiecePresenceResolver(
+            progressState = progressState,
+            horizontalPieces = horizontalPieces,
+            verticalPieces = verticalPieces
+        )
+    }
 }
 
 @Preview

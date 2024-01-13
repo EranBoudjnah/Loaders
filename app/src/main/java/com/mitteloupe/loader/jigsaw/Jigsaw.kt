@@ -59,7 +59,7 @@ fun Jigsaw() {
                             ProgressState.DeterminateSpiral(progress.floatValue)
                         }
 
-                        else -> ProgressState.Indeterminate
+                        else -> ProgressState.Indeterminate()
                     }
                 }
             }

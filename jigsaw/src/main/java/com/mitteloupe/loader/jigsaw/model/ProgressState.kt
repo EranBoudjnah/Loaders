@@ -3,7 +3,7 @@ package com.mitteloupe.loader.jigsaw.model
 interface ProgressState {
     fun stateAtPosition(x: Int, y: Int, horizontalPieces: Int, verticalPieces: Int): Boolean
 
-    data object Indeterminate : ProgressState {
+    data class Indeterminate(val intervalMilliseconds: Long = 1500L) : ProgressState {
         override fun stateAtPosition(x: Int, y: Int, horizontalPieces: Int, verticalPieces: Int) =
             true
     }

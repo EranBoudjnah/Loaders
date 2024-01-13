@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.mechanism.sqrt
 import com.mitteloupe.loader.gears.model.GearType
 import com.mitteloupe.loader.settings.SliderWithTitle
-import com.mitteloupe.loader.settings.TwoValueSelector
+import com.mitteloupe.loader.settings.MultipleValueSelector
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -98,7 +98,7 @@ fun ControlPanel(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        TwoValueSelector(
+        MultipleValueSelector(
             selectedOption = gearType,
             "Square" to GearType.Square,
             "Sharp" to GearType.Sharp,

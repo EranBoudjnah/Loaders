@@ -14,7 +14,7 @@ import com.mitteloupe.loader.jigsaw.BrushProvider.ImageResourceBrushProvider
 import com.mitteloupe.loader.jigsaw.model.KnobConfiguration
 import com.mitteloupe.loader.jigsaw.model.ProgressState
 import com.mitteloupe.loader.settings.SliderWithTitle
-import com.mitteloupe.loader.settings.TwoValueSelector
+import com.mitteloupe.loader.settings.MultipleValueSelector
 import kotlin.reflect.KClass
 
 private const val MAXIMUM_HORIZONTAL_PIECES = 32
@@ -44,16 +44,17 @@ fun ControlPanel(
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
-        TwoValueSelector(
+        MultipleValueSelector(
             selectedOption = progressMode,
             "Sweep" to ProgressState.DeterminateSweep::class,
             "Spiral" to ProgressState.DeterminateSpiral::class,
+            "Indeterminate" to ProgressState.Indeterminate::class,
             modifier = Modifier
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
         Divider()
-        TwoValueSelector(
+        MultipleValueSelector(
             selectedOption = knobConfiguration,
             "Round knob" to JigsawLoaderDefaults.knobConfiguration,
             "Flat knob" to JigsawLoaderDefaults.flatKnobConfiguration,
@@ -87,7 +88,7 @@ fun ControlPanel(
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
-        TwoValueSelector(
+        MultipleValueSelector(
             selectedOption = brushProvider,
             "Bitmap" to ImageResourceBrushProvider(R.drawable.jigsaw_image),
             "Color" to JigsawLoaderDefaults.brushProvider,
