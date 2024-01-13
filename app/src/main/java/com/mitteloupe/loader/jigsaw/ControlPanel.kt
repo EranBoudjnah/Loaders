@@ -13,8 +13,8 @@ import com.mitteloupe.loader.R
 import com.mitteloupe.loader.jigsaw.BrushProvider.ImageResourceBrushProvider
 import com.mitteloupe.loader.jigsaw.model.KnobConfiguration
 import com.mitteloupe.loader.jigsaw.model.ProgressState
-import com.mitteloupe.loader.settings.SliderWithTitle
 import com.mitteloupe.loader.settings.MultipleValueSelector
+import com.mitteloupe.loader.settings.SliderWithTitle
 import kotlin.reflect.KClass
 
 private const val MAXIMUM_HORIZONTAL_PIECES = 32
@@ -82,7 +82,7 @@ fun ControlPanel(
             onValueChange = {
                 verticalPieces.value =
                     (it * (MAXIMUM_VERTICAL_PIECES - MINIMUM_VERTICAL_PIECES).toFloat()).toInt() +
-                    MINIMUM_VERTICAL_PIECES
+                        MINIMUM_VERTICAL_PIECES
             },
             modifier = Modifier
                 .width(350.dp)

@@ -15,8 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.mechanism.sqrt
 import com.mitteloupe.loader.gears.model.GearType
-import com.mitteloupe.loader.settings.SliderWithTitle
 import com.mitteloupe.loader.settings.MultipleValueSelector
+import com.mitteloupe.loader.settings.SliderWithTitle
 import kotlin.math.max
 import kotlin.random.Random
 
