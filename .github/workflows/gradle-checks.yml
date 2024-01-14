@@ -60,10 +60,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Assemble
-        run: ./gradlew gears:assemble
+        run: ./gradlew gears:assemble jigsaw:assemble trigonometry:assemble
 
       - name: Publish to local maven
-        run: ./gradlew :gears:publishToMavenLocal
+        run: ./gradlew :gears:publishToMavenLocal :jigsaw:publishToMavenLocal :trigonometry:publishToMavenLocal
 
       - name: Run unit tests
         run: ./gradlew test
