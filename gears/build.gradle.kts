@@ -10,7 +10,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":trigonometry"))
+                api("com.mitteloupe.loaders:loaders-trigonometry:0.1.0")
                 implementation(
                     project.dependencies.platform("androidx.compose:compose-bom:2023.10.01")
                 )
@@ -78,7 +78,7 @@ android {
 
 ext {
     set("PUBLISH_ARTIFACT_ID", "loaders-gears")
-    set("PUBLISH_VERSION", "0.2.0")
+    set("PUBLISH_VERSION", "0.3.0")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {

@@ -10,7 +10,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":trigonometry"))
+                implementation("com.mitteloupe.loaders:loaders-trigonometry:0.1.0")
                 implementation(
                     project.dependencies.platform("androidx.compose:compose-bom:2023.10.01")
                 )

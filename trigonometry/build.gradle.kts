@@ -5,7 +5,10 @@ plugins {
 }
 
 kotlin {
-    androidTarget()
+    androidTarget {
+        withSourcesJar()
+        publishAllLibraryVariants()
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -73,4 +76,18 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
     }
+}
+
+ext {
+    set("PUBLISH_ARTIFACT_ID", "loaders-trigonometry")
+    set("PUBLISH_VERSION", "0.1.0")
+}
+
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(android.sourceSets.getByName("main").java.srcDirs)
+}
+
+apply {
+    from("release-jar.gradle")
 }

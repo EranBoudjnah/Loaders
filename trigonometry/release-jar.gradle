@@ -38,7 +38,7 @@ project.afterEvaluate {
 
                 pom {
                     name = project.PUBLISH_ARTIFACT_ID
-                    description = 'Gears Loader.'
+                    description = 'Loaders Trigonometry.'
                     url = gitUrl
                     licenses {
                         license {
@@ -57,14 +57,6 @@ project.afterEvaluate {
                             name = "Eran Boudjnah"
                             email = "eranbou+loaders@gmail.com"
                         }
-                    }
-                    withXml {
-                        def dependenciesNode = asNode().appendNode('dependencies')
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', "com.mitteloupe.loaders")
-                        dependencyNode.appendNode('artifactId', "loaders-trigonometry")
-                        dependencyNode.appendNode('version', "0.1.0")
-                        dependencyNode.appendNode('scope', "compile")
                     }
                 }
             }

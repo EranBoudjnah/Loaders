@@ -37,8 +37,8 @@ extra.set("PUBLISH_GROUP_ID", "com.mitteloupe.loaders")
 nexusPublishing {
     repositories {
         sonatype {
-            username = "$ossrhUsername"
-            password = "$ossrhPassword"
+            username.set("$ossrhUsername")
+            password.set("$ossrhPassword")
             packageGroup.set("${project.extra["PUBLISH_GROUP_ID"]}")
         }
     }
