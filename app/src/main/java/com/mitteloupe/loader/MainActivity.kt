@@ -36,7 +36,8 @@ fun MainNavHost(
         composable("home") {
             Home(
                 onNavigateToGears = { navController.navigate("gears") },
-                onNavigateToJigsaw = { navController.navigate("jigsaw") })
+                onNavigateToJigsaw = { navController.navigate("jigsaw") }
+            )
         }
         composable("gears") { Gears() }
         composable("jigsaw") { Jigsaw() }

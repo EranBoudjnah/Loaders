@@ -106,7 +106,9 @@ fun JigsawLoader(
             ),
             label = "Presence state animation"
         ).value
-    } else 1f
+    } else {
+        1f
+    }
 
     LaunchedEffect(presenceState) {
         if (presenceState == 0f) {
