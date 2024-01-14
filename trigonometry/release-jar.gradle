@@ -69,6 +69,7 @@ project.afterEvaluate {
 
     publishMavenPublicationToMavenLocal
             .dependsOn(sourcesJar)
+            .dependsOn(bundleReleaseAar)
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
