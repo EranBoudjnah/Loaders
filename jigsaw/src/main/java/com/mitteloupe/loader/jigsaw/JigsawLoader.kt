@@ -1,6 +1,7 @@
 package com.mitteloupe.loader.jigsaw
 
 import Orientation
+import android.graphics.Point
 import android.graphics.PointF
 import androidx.annotation.FloatRange
 import androidx.compose.animation.core.AnimationConstants
@@ -72,7 +73,8 @@ fun JigsawLoader(
     @FloatRange(from = 0.0, to = 1.0) trackSaturation: Float = 1f,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean =
         JigsawLoaderDefaults.knobInversionEvaluator,
-    knobConfiguration: KnobConfiguration = JigsawLoaderDefaults.knobConfiguration
+    knobConfiguration: KnobConfiguration = JigsawLoaderDefaults.knobConfiguration,
+    overflow: Boolean = false
 ) {
     var activePiecePresenceResolver by remember {
         mutableStateOf(piecePresenceResolver)
@@ -117,7 +119,8 @@ fun JigsawLoader(
         verticalPieces,
         progressState,
         knobConfiguration,
-        presenceState
+        presenceState,
+        overflow
     ) {
         derivedStateOf {
             Path().apply {
@@ -128,7 +131,8 @@ fun JigsawLoader(
                     pieceHeight = pieceHeight,
                     piecePresenceResolver = activePiecePresenceResolver,
                     knobInversionEvaluator = knobInversionEvaluator,
-                    knobConfiguration = knobConfiguration
+                    knobConfiguration = knobConfiguration,
+                    overflow = overflow
                 )
             }
         }
@@ -143,7 +147,8 @@ fun JigsawLoader(
                     pieceHeight = pieceHeight,
                     piecePresenceResolver = activePiecePresenceResolver,
                     knobInversionEvaluator = knobInversionEvaluator,
-                    knobConfiguration = knobConfiguration
+                    knobConfiguration = knobConfiguration,
+                    overflow = overflow
                 )
             }
         }
@@ -220,7 +225,8 @@ fun JigsawLoader(
                                     placesHorizontal = horizontalPieces,
                                     placesVertical = verticalPieces,
                                     knobInversionEvaluator = knobInversionEvaluator,
-                                    knobConfiguration = knobConfiguration
+                                    knobConfiguration = knobConfiguration,
+                                    overflow = overflow
                                 )
                             }
                         )
@@ -234,6 +240,40 @@ fun JigsawLoader(
                         )
                     }
                 }
+            }
+        }
+
+        val overflowPieceCoordinates = if (overflow) {
+            (0 until horizontalPieces).flatMap { x ->
+                listOf(Point(x, -1), Point(x, verticalPieces))
+            } + (0 until verticalPieces).flatMap { y ->
+                listOf(Point(-1, y), Point(horizontalPieces, y))
+            }
+        } else {
+            emptyList()
+        }
+        overflowPieceCoordinates.forEach { point ->
+            val path by remember(lightPath) {
+                mutableStateOf(
+                    Path().apply {
+                        piece(
+                            left = pieceWidth * point.x,
+                            top = pieceHeight * point.y,
+                            width = pieceWidth,
+                            height = pieceHeight,
+                            placeX = point.x,
+                            placeY = point.y,
+                            placesHorizontal = horizontalPieces,
+                            placesVertical = verticalPieces,
+                            knobInversionEvaluator = knobInversionEvaluator,
+                            knobConfiguration = knobConfiguration,
+                            overflow = true
+                        )
+                    }
+                )
+            }
+            Canvas(modifier = Modifier.matchParentSize()) {
+                drawPath(path = path, brush = imageBrush, style = Fill)
             }
         }
 
@@ -263,20 +303,30 @@ private fun Path.addAllPiecesTopLeft(
     pieceHeight: Float,
     piecePresenceResolver: PiecePresenceResolver,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean,
-    knobConfiguration: KnobConfiguration
+    knobConfiguration: KnobConfiguration,
+    overflow: Boolean
 ) {
-    repeat(verticalPieces) { y ->
-        repeat(horizontalPieces) { x ->
-            if (piecePresenceResolver.piecePresent(x, y)) {
+    val overflowCellCount = if (overflow) 2 else 0
+    repeat(verticalPieces + overflowCellCount) { y ->
+        repeat(horizontalPieces + overflowCellCount) { x ->
+            val (actualX, actualY) = if (overflow) {
+                x - 1 to y - 1
+            } else {
+                x to y
+            }
+            if (inOverflowFrame(overflow, actualX, actualY, horizontalPieces, verticalPieces) ||
+                piecePresenceResolver.piecePresent(actualX, actualY)
+            ) {
                 pieceTopLeft(
-                    left = pieceWidth * x + 1f,
-                    top = pieceHeight * y + 1f,
+                    left = pieceWidth * actualX + 1f,
+                    top = pieceHeight * actualY + 1f,
                     width = pieceWidth,
                     height = pieceHeight,
-                    placeX = x,
-                    placeY = y,
+                    placeX = actualX,
+                    placeY = actualY,
                     knobInversionEvaluator = knobInversionEvaluator,
-                    knobConfiguration = knobConfiguration
+                    knobConfiguration = knobConfiguration,
+                    overflow = overflow
                 )
             }
         }
@@ -291,10 +341,11 @@ private fun Path.pieceTopLeft(
     placeX: Int,
     placeY: Int,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean,
-    knobConfiguration: KnobConfiguration
+    knobConfiguration: KnobConfiguration,
+    overflow: Boolean
 ) {
     moveTo(left, top)
-    if (placeY == 0) {
+    if (placeY == 0 && !overflow) {
         lineTo(left + width, top)
     } else {
         pieceEdge(
@@ -308,7 +359,7 @@ private fun Path.pieceTopLeft(
         )
     }
     moveTo(left, top + height)
-    if (placeX == 0) {
+    if (placeX == 0 && !overflow) {
         lineTo(left, top)
     } else {
         pieceEdge(
@@ -330,27 +381,45 @@ private fun Path.addAllPiecesBottomRight(
     pieceHeight: Float,
     piecePresenceResolver: PiecePresenceResolver,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean,
-    knobConfiguration: KnobConfiguration
+    knobConfiguration: KnobConfiguration,
+    overflow: Boolean
 ) {
-    repeat(verticalPieces) { y ->
-        repeat(horizontalPieces) { x ->
-            if (piecePresenceResolver.piecePresent(x, y)) {
+    val overflowCellCount = if (overflow) 2 else 0
+    repeat(verticalPieces + overflowCellCount) { y ->
+        repeat(horizontalPieces + overflowCellCount) { x ->
+            val (actualX, actualY) = if (overflow) {
+                x - 1 to y - 1
+            } else {
+                x to y
+            }
+            if (inOverflowFrame(overflow, actualX, actualY, horizontalPieces, verticalPieces) ||
+                piecePresenceResolver.piecePresent(actualX, actualY)
+            ) {
                 pieceBottomRight(
-                    left = pieceWidth * x - 1f,
-                    top = pieceHeight * y - 1f,
+                    left = pieceWidth * actualX - 1f,
+                    top = pieceHeight * actualY - 1f,
                     width = pieceWidth,
                     height = pieceHeight,
-                    placeX = x,
-                    placeY = y,
+                    placeX = actualX,
+                    placeY = actualY,
                     placesHorizontal = horizontalPieces,
                     placesVertical = verticalPieces,
                     knobInversionEvaluator = knobInversionEvaluator,
-                    knobConfiguration = knobConfiguration
+                    knobConfiguration = knobConfiguration,
+                    overflow = overflow
                 )
             }
         }
     }
 }
+
+private fun inOverflowFrame(
+    overflow: Boolean,
+    x: Int,
+    y: Int,
+    horizontalPieces: Int,
+    verticalPieces: Int
+): Boolean = overflow && (x == -1 || y == -1 || x == horizontalPieces || y == verticalPieces)
 
 private fun Path.pieceBottomRight(
     left: Float,
@@ -362,10 +431,11 @@ private fun Path.pieceBottomRight(
     placesHorizontal: Int,
     placesVertical: Int,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean,
-    knobConfiguration: KnobConfiguration
+    knobConfiguration: KnobConfiguration,
+    overflow: Boolean
 ) {
     moveTo(left + width, top)
-    if (placeX == placesHorizontal - 1) {
+    if (placeX == placesHorizontal - 1 && !overflow) {
         lineTo(left + width, top + height)
     } else {
         pieceEdge(
@@ -378,7 +448,7 @@ private fun Path.pieceBottomRight(
             knobConfiguration = knobConfiguration
         )
     }
-    if (placeY == placesVertical - 1) {
+    if (placeY == placesVertical - 1 && !overflow) {
         lineTo(left, top + height)
     } else {
         pieceEdge(
@@ -403,10 +473,11 @@ private fun Path.piece(
     placesHorizontal: Int,
     placesVertical: Int,
     knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean,
-    knobConfiguration: KnobConfiguration
+    knobConfiguration: KnobConfiguration,
+    overflow: Boolean
 ) {
     moveTo(left, top)
-    if (placeY == 0) {
+    if (placeY == 0 && !overflow) {
         lineTo(left + width, top)
     } else {
         pieceEdge(
@@ -419,7 +490,7 @@ private fun Path.piece(
             knobConfiguration = knobConfiguration
         )
     }
-    if (placeX == placesHorizontal - 1) {
+    if (placeX == placesHorizontal - 1 && !overflow) {
         lineTo(left + width, top + height)
     } else {
         pieceEdge(
@@ -432,7 +503,7 @@ private fun Path.piece(
             knobConfiguration = knobConfiguration
         )
     }
-    if (placeY == placesVertical - 1) {
+    if (placeY == placesVertical - 1 && !overflow) {
         lineTo(left, top + height)
     } else {
         pieceEdge(
@@ -445,7 +516,7 @@ private fun Path.piece(
             knobConfiguration = knobConfiguration
         )
     }
-    if (placeX == 0) {
+    if (placeX == 0 && !overflow) {
         lineTo(left, top)
     } else {
         pieceEdge(
