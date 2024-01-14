@@ -59,11 +59,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Assemble dependencies
+        run: ./gradlew trigonometry:assemble
+
+      - name: Publish dependencies to local maven
+        run: ./gradlew :trigonometry:publishToMavenLocal
+
       - name: Assemble
-        run: ./gradlew gears:assemble jigsaw:assemble trigonometry:assemble
+        run: ./gradlew gears:assemble jigsaw:assemble
 
       - name: Publish to local maven
-        run: ./gradlew :gears:publishToMavenLocal :jigsaw:publishToMavenLocal :trigonometry:publishToMavenLocal
+        run: ./gradlew :gears:publishToMavenLocal :jigsaw:publishToMavenLocal
 
       - name: Run unit tests
         run: ./gradlew test
