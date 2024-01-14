@@ -5,7 +5,11 @@ import android.graphics.PointF
 import androidx.annotation.FloatRange
 import androidx.compose.animation.core.AnimationConstants
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -47,7 +51,6 @@ import com.mitteloupe.loader.jigsaw.model.KnobConfiguration
 import com.mitteloupe.loader.jigsaw.model.ProgressState
 import com.mitteloupe.loader.jigsaw.model.ProgressState.Indeterminate
 import kotlin.random.Random
-import kotlinx.coroutines.delay
 
 @Composable
 fun JigsawLoader(
@@ -89,17 +92,23 @@ fun JigsawLoader(
         }
     }
 
-    var presenceState by remember {
-        mutableStateOf(false)
-    }
+    val presenceStateInfiniteTransition = rememberInfiniteTransition("Presence state transition")
 
-    LaunchedEffect(activePiecePresenceResolver, progressState) {
-        if (progressState is Indeterminate) {
-            while (true) {
-                activePiecePresenceResolver.iterate()
-                presenceState = !presenceState
-                delay(progressState.intervalMilliseconds)
-            }
+    val presenceState = if (progressState is Indeterminate) {
+        presenceStateInfiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = progressState.intervalMilliseconds.toInt()),
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "Presence state animation"
+        ).value
+    } else 1f
+
+    LaunchedEffect(presenceState) {
+        if (presenceState == 0f) {
+            activePiecePresenceResolver.iterate()
         }
     }
 
