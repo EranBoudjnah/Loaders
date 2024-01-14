@@ -7,7 +7,7 @@ import kotlin.math.hypot
 import kotlin.math.sqrt
 
 const val PI_FLOAT = PI.toFloat()
-const val PI_FLOAT_HALF = PI.toFloat() / 2f
+const val PI_FLOAT_HALF = PI_FLOAT / 2f
 const val PI_FLOAT_2 = PI_FLOAT * 2f
 private const val DEGREES_TO_RADIANS = 180f / PI_FLOAT
 
