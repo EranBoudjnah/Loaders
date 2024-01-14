@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.mitteloupe.loader.gears.composable.Gear
 import com.mitteloupe.loader.gears.mechanism.GearMesher
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
 import com.mitteloupe.loader.gears.mechanism.RectangleFiller
 import com.mitteloupe.loader.gears.model.Gear
 import com.mitteloupe.loader.gears.model.GearConfiguration
 import com.mitteloupe.loader.gears.model.GearType
 import com.mitteloupe.loader.gears.model.ProgressState
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_2
 
 @Composable
 fun GearsLoader(

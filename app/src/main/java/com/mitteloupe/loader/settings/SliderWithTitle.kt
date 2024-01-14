@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,8 +26,14 @@ fun SliderWithTitle(
             modifier = Modifier.padding(8.dp, 0.dp)
         )
         Slider(
-            value = value,
+            value = value.coerceIn(0f, 1f),
             onValueChange = onValueChange
         )
     }
+}
+
+@Preview
+@Composable
+fun Preview() {
+    SliderWithTitle(text = "Volume", value = 0.5f, onValueChange = {})
 }

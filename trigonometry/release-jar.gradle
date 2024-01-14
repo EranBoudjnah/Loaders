@@ -1,0 +1,79 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def gitUrl = 'https://github.com/EranBoudjnah/Loaders.git'
+
+project.afterEvaluate {
+    Properties properties = new Properties()
+    File propertiesFile = project.rootProject.file("local.properties")
+    if (propertiesFile.exists()) {
+        properties.load(propertiesFile.newDataInputStream())
+    }
+    def ossrhUsername = properties['ossrhUsername']
+    def ossrhPassword = properties['ossrhPassword']
+    def pomVersion = project.PUBLISH_VERSION
+
+    publishing {
+        repositories {
+            mavenLocal()
+            maven {
+                name = "SonatypeStaging"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+        }
+
+        publications {
+            maven(MavenPublication) {
+                groupId = project.PUBLISH_GROUP_ID
+                artifactId = project.PUBLISH_ARTIFACT_ID
+                version = pomVersion
+                tasks.getByName("bundleReleaseAar").outputs.files.forEach {
+                    artifact(it)
+                }
+                artifact(sourcesJar)
+
+                pom {
+                    name = project.PUBLISH_ARTIFACT_ID
+                    description = 'Loaders Trigonometry.'
+                    url = gitUrl
+                    licenses {
+                        license {
+                            name = 'MIT'
+                            url = 'https://github.com/EranBoudjnah/Loaders/blob/master/LICENSE'
+                        }
+                    }
+                    scm {
+                        connection = gitUrl
+                        developerConnection = gitUrl
+                        url = gitUrl
+                    }
+                    developers {
+                        developer {
+                            id = "EranBoudjnah"
+                            name = "Eran Boudjnah"
+                            email = "eranbou+loaders@gmail.com"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.maven
+    }
+
+    publishMavenPublicationToMavenLocal
+            .dependsOn(sourcesJar)
+            .dependsOn(bundleReleaseAar)
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (!taskGraph.hasTask(publishMavenPublicationToSonatypeStagingRepository)) {
+        signMavenPublication.enabled = false
+    }
+}

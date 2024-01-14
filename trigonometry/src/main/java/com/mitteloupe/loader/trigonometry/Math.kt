@@ -1,4 +1,4 @@
-package com.mitteloupe.loader.gears.model
+package com.mitteloupe.loader.trigonometry
 
 import kotlin.math.abs
 

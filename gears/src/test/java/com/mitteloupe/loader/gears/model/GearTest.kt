@@ -2,8 +2,8 @@ package com.mitteloupe.loader.gears.model
 
 import android.graphics.PointF
 import com.mitteloupe.android.mockPointF
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_HALF
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_2
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_HALF
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

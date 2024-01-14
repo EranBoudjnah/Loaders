@@ -1,5 +1,7 @@
 package com.mitteloupe.loader.gears.model
 
+import com.mitteloupe.loader.trigonometry.safeLesserOrEqual
+
 interface ProgressState {
     fun stateAtPosition(range: Float, value: Float): Float
 

@@ -18,11 +18,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_HALF
-import com.mitteloupe.loader.gears.mechanism.radians
 import com.mitteloupe.loader.gears.model.Gear
 import com.mitteloupe.loader.gears.model.GearType
+import com.mitteloupe.loader.trigonometry.PI_FLOAT
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_HALF
+import com.mitteloupe.loader.trigonometry.radians
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin

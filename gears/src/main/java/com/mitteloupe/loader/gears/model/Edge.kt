@@ -1,8 +1,8 @@
 package com.mitteloupe.loader.gears.model
 
 import android.graphics.PointF
-import com.mitteloupe.loader.gears.mechanism.distance
-import com.mitteloupe.loader.gears.mechanism.sqrt
+import com.mitteloupe.loader.trigonometry.distance
+import com.mitteloupe.loader.trigonometry.sqrt
 
 data class Edge(
     val point1: PointF,

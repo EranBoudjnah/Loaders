@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun <T> TwoValueSelector(
+fun <T> MultipleValueSelector(
     selectedOption: MutableState<T>,
     vararg options: Pair<String, T>,
     modifier: Modifier = Modifier,

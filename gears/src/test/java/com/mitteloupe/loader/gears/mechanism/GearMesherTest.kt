@@ -3,7 +3,10 @@ package com.mitteloupe.loader.gears.mechanism
 import android.graphics.PointF
 import com.mitteloupe.android.mockPointF
 import com.mitteloupe.loader.gears.model.Gear
-import com.mitteloupe.loader.gears.model.PRECISION_CORRECTION
+import com.mitteloupe.loader.trigonometry.PI_FLOAT
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_2
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_HALF
+import com.mitteloupe.loader.trigonometry.PRECISION_CORRECTION
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

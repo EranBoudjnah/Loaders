@@ -59,11 +59,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Assemble dependencies
+        run: ./gradlew trigonometry:assemble
+
+      - name: Publish dependencies to local maven
+        run: ./gradlew :trigonometry:publishToMavenLocal
+
       - name: Assemble
-        run: ./gradlew gears:assemble
+        run: ./gradlew gears:assemble jigsaw:assemble
 
       - name: Publish to local maven
-        run: ./gradlew :gears:publishToMavenLocal
+        run: ./gradlew :gears:publishToMavenLocal :jigsaw:publishToMavenLocal
 
       - name: Run unit tests
         run: ./gradlew test
@@ -92,11 +98,20 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Assemble dependencies
+        run: ./gradlew trigonometry:assemble
+
+      - name: Publish dependencies to local maven
+        run: ./gradlew :trigonometry:publishToMavenLocal
+
       - name: Assemble
-        run: ./gradlew :app:assemble :gears:assemble
+        run: ./gradlew gears:assemble jigsaw:assemble
 
       - name: Publish to local maven
-        run: ./gradlew :gears:publishToMavenLocal
+        run: ./gradlew :gears:publishToMavenLocal :jigsaw:publishToMavenLocal
+
+      - name: Assemble app
+        run: ./gradlew :app:assemble
 
       - name: Run lint
         run: ./gradlew lint --no-daemon

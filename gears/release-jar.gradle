@@ -13,7 +13,6 @@ project.afterEvaluate {
     def ossrhPassword = properties['ossrhPassword']
     def pomVersion = project.PUBLISH_VERSION
 
-
     publishing {
         repositories {
             mavenLocal()
@@ -59,6 +58,14 @@ project.afterEvaluate {
                             email = "eranbou+loaders@gmail.com"
                         }
                     }
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', "com.mitteloupe.loaders")
+                        dependencyNode.appendNode('artifactId', "loaders-trigonometry")
+                        dependencyNode.appendNode('version', "0.1.0")
+                        dependencyNode.appendNode('scope', "compile")
+                    }
                 }
             }
         }
@@ -70,6 +77,7 @@ project.afterEvaluate {
 
     publishMavenPublicationToMavenLocal
             .dependsOn(sourcesJar)
+            .dependsOn(bundleReleaseAar)
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
