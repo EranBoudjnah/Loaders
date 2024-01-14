@@ -109,11 +109,13 @@ fun JigsawLoader(
     } else {
         1f
     }
+    var lastPresenceState by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(presenceState) {
-        if (presenceState == 0f) {
+        if (presenceState < lastPresenceState) {
             activePiecePresenceResolver.iterate()
         }
+        lastPresenceState = presenceState
     }
 
     val lightPath by remember(
