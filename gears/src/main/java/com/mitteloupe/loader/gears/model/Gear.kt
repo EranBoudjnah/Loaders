@@ -2,9 +2,9 @@ package com.mitteloupe.loader.gears.model
 
 import android.graphics.PointF
 import android.os.Parcelable
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT
-import com.mitteloupe.loader.gears.mechanism.PI_FLOAT_2
 import com.mitteloupe.loader.gears.mechanism.numberOfTeeth
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_2
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_HALF
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -38,7 +38,7 @@ data class Gear(
     )
 
     fun outerArc(outerRadius: Float): Arc =
-        Arc(center, radius + outerRadius, -PI_FLOAT / 2f, PI_FLOAT_2)
+        Arc(center, radius + outerRadius, -PI_FLOAT_HALF, PI_FLOAT_2)
 
     fun contains(point: PointF, minus: PointF.(other: PointF) -> PointF = PointF::minus): Boolean {
         val distanceFromCenter = center.minus(point)

@@ -4,6 +4,7 @@ import android.graphics.PointF
 import android.graphics.RectF
 import com.mitteloupe.loader.gears.model.Arc
 import com.mitteloupe.loader.gears.model.Gear
+import com.mitteloupe.loader.trigonometry.PI_FLOAT
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
@@ -77,7 +78,6 @@ class RectangleFiller(
                 toothWidth = toothWidth,
                 toothDepth = toothDepth
             )
-            println("Trying smallerRadiuS $smallerRadius ($nextRadius)")
             if (smallerRadius >= minimumRadius) {
                 return addGear(
                     originGear = originGear,
@@ -113,7 +113,6 @@ class RectangleFiller(
                 toothWidth = toothWidth,
                 toothDepth = toothDepth
             )
-            println("Trying smallerRadius $smallerRadius ($nextRadius)")
             if (smallerRadius >= minimumRadius) {
                 return addGear(
                     originGear = originGear,

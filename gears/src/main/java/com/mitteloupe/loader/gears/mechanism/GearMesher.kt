@@ -2,6 +2,8 @@ package com.mitteloupe.loader.gears.mechanism
 
 import android.graphics.PointF
 import com.mitteloupe.loader.gears.model.Gear
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_2
+import com.mitteloupe.loader.trigonometry.PI_FLOAT_HALF
 import kotlin.math.atan2
 
 class GearMesher {
