@@ -13,18 +13,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mitteloupe.loader.gears.mechanism.sqrt
 import com.mitteloupe.loader.gears.model.GearType
 import com.mitteloupe.loader.settings.MultipleValueSelector
 import com.mitteloupe.loader.settings.SliderWithTitle
 import kotlin.math.max
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 private const val MINIMAL_RADIUS_VALUE = 6f
 private const val MAXIMAL_RADIUS_VALUE = 60f
 private const val MAXIMAL_TOOTH_ROUNDNESS_VALUE = 1f
 private const val MINIMAL_TOOTH_WIDTH = 2f
-private val maximalToothWidth = MAXIMAL_RADIUS_VALUE * 3f.sqrt()
+private val maximalToothWidth = MAXIMAL_RADIUS_VALUE * sqrt(3f)
 
 @Composable
 fun ControlPanel(
@@ -39,9 +39,9 @@ fun ControlPanel(
     toothRoundness: MutableState<Float>
 ) {
     fun maximalToothDepth() =
-        minimumRadius.value - max(holeRadius.value, toothWidth.value / 3f.sqrt())
+        minimumRadius.value - max(holeRadius.value, toothWidth.value / sqrt(3f))
 
-    fun maximalToothWidth(): Float = (minimumRadius.value - toothDepth.value) * 3f.sqrt()
+    fun maximalToothWidth(): Float = (minimumRadius.value - toothDepth.value) * sqrt(3f)
     fun maximalHoleRadius() = minimumRadius.value - toothDepth.value - .01f
 
     Column(
