@@ -3,6 +3,7 @@ package com.mitteloupe.loader.gears
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -78,6 +79,7 @@ fun ControlPanel(
             modifier = Modifier
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally)
+                .padding(top = 16.dp)
         ) {
             SliderWithTitle(
                 text = "Minimum radius",

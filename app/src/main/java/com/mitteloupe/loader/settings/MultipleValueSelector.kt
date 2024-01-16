@@ -8,6 +8,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,10 @@ fun <T> MultipleValueSelector(
                 Text(
                     text = option.first,
                     color = color,
-                    modifier = Modifier.padding(0.dp, 12.dp)
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier
+                        .align(CenterVertically)
+                        .padding(bottom = 2.dp)
                 )
             }
         }

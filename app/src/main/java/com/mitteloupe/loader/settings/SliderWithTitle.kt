@@ -23,6 +23,7 @@ fun SliderWithTitle(
         Text(
             text = text,
             color = color,
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(8.dp, 0.dp)
         )
         Slider(
