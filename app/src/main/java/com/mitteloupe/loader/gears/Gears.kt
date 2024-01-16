@@ -75,7 +75,7 @@ fun Gears(navController: NavHostController) {
                     }
                 }
             )
-        },
+        }
     ) { innerPadding ->
         Surface(
             color = MaterialTheme.colorScheme.background,

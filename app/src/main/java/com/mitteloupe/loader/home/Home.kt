@@ -1,7 +1,5 @@
 package com.mitteloupe.loader.home
 
-import com.mitteloupe.loader.gears.model.ProgressState as GearsProgressState
-import com.mitteloupe.loader.jigsaw.model.ProgressState as JigsawProgressState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animate
@@ -45,10 +43,12 @@ import com.mitteloupe.loader.R
 import com.mitteloupe.loader.gears.GearsLoader
 import com.mitteloupe.loader.gears.model.GearConfiguration
 import com.mitteloupe.loader.gears.model.GearType
+import com.mitteloupe.loader.gears.model.ProgressState as GearsProgressState
 import com.mitteloupe.loader.jigsaw.BrushProvider
 import com.mitteloupe.loader.jigsaw.BrushProvider.ImageResourceBrushProvider
 import com.mitteloupe.loader.jigsaw.JigsawLoader
 import com.mitteloupe.loader.jigsaw.JigsawLoaderDefaults
+import com.mitteloupe.loader.jigsaw.model.ProgressState as JigsawProgressState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,13 +78,13 @@ fun Home(onNavigateToGears: () -> Unit, onNavigateToJigsaw: () -> Unit) {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 title = {
                     Text("Loader")
                 }
             )
-        },
+        }
     ) { innerPadding ->
         Surface(
             color = MaterialTheme.colorScheme.background,

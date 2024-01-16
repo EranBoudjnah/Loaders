@@ -71,7 +71,7 @@ fun Jigsaw(navController: NavHostController) {
                     }
                 }
             )
-        },
+        }
     ) { innerPadding ->
         Surface(
             color = MaterialTheme.colorScheme.background,
