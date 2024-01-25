@@ -42,7 +42,8 @@ fun ControlPanel(
             onValueChange = { progress.value = it },
             modifier = Modifier
                 .width(350.dp)
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
+            enabled = progressMode.value != ProgressState.Indeterminate::class
         )
         MultipleValueSelector(
             selectedOption = progressMode,
