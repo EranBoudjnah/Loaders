@@ -17,6 +17,7 @@ fun SliderWithTitle(
     value: Float,
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     color: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Column(modifier) {
@@ -28,6 +29,7 @@ fun SliderWithTitle(
         )
         Slider(
             value = value.coerceIn(0f, 1f),
+            enabled = enabled,
             onValueChange = onValueChange
         )
     }
