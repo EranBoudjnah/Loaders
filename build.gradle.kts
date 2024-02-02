@@ -7,7 +7,7 @@ plugins {
     id("com.android.library") version "8.2.2" apply false
     kotlin("multiplatform") version "1.9.22" apply false
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-2"
 }
 
 configure<KtlintExtension> {
