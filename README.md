@@ -89,5 +89,5 @@ make changes and raise a pull request.
 
 ### License
 
-This project is distributed under the terms of the MIT License. See [LICENSE.md](LICENSE) for
+This project is distributed under the terms of the MIT License. See [LICENSE](LICENSE) for
 details.
