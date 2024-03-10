@@ -2,10 +2,12 @@ import java.util.*
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
-    id("com.android.application") version "8.2.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
-    id("com.android.library") version "8.2.2" apply false
-    kotlin("multiplatform") version "1.9.22" apply false
+    val androidVersion = "8.2.2"
+    val kotlinAndroidVersion = "1.9.22"
+    id("com.android.application") version androidVersion apply false
+    id("org.jetbrains.kotlin.android") version kotlinAndroidVersion apply false
+    id("com.android.library") version androidVersion apply false
+    kotlin("multiplatform") version kotlinAndroidVersion apply false
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-2"
 }
