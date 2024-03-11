@@ -78,7 +78,7 @@ android {
 
 ext {
     set("PUBLISH_ARTIFACT_ID", "loaders-jigsaw")
-    set("PUBLISH_VERSION", "0.1.0")
+    set("PUBLISH_VERSION", "0.2.0")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {

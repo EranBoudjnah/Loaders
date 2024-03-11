@@ -15,8 +15,8 @@ Update the project build.gradle. You can include one or more of the loaders:
 
 ```gradle
 dependencies {
-   implementation 'com.mitteloupe.loaders:loaders-gears:0.3.0'
-   implementation 'com.mitteloupe.loaders:loaders-jigsaw:0.1.0'
+   implementation 'com.mitteloupe.loaders:loaders-gears:0.4.0'
+   implementation 'com.mitteloupe.loaders:loaders-jigsaw:0.2.0'
 }
 ```
 

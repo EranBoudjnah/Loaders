@@ -78,7 +78,7 @@ android {
 
 ext {
     set("PUBLISH_ARTIFACT_ID", "loaders-gears")
-    set("PUBLISH_VERSION", "0.3.0")
+    set("PUBLISH_VERSION", "0.4.0")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
