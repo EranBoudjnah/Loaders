@@ -3,7 +3,7 @@ package com.mitteloupe.loader.jigsaw
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -54,7 +54,7 @@ fun ControlPanel(
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally)
         )
-        Divider()
+        HorizontalDivider()
         MultipleValueSelector(
             selectedOption = knobConfiguration,
             "Round knob" to JigsawLoaderDefaults.knobConfiguration,

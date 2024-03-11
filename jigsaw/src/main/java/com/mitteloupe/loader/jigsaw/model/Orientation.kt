@@ -1,3 +1,5 @@
+package com.mitteloupe.loader.jigsaw.model
+
 import android.graphics.PointF
 
 sealed interface Orientation {

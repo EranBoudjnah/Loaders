@@ -1,6 +1,5 @@
 package com.mitteloupe.loader.jigsaw
 
-import Orientation
 import android.graphics.Point
 import android.graphics.PointF
 import androidx.annotation.FloatRange
@@ -49,6 +48,7 @@ import com.mitteloupe.loader.jigsaw.BrushProvider.ColorBrushProvider
 import com.mitteloupe.loader.jigsaw.PiecePresenceResolver.IndeterminatePiecePresenceResolver
 import com.mitteloupe.loader.jigsaw.PiecePresenceResolver.ProgressPiecePresenceResolver
 import com.mitteloupe.loader.jigsaw.model.KnobConfiguration
+import com.mitteloupe.loader.jigsaw.model.Orientation
 import com.mitteloupe.loader.jigsaw.model.ProgressState
 import com.mitteloupe.loader.jigsaw.model.ProgressState.Indeterminate
 import kotlin.random.Random
@@ -57,8 +57,8 @@ import kotlin.random.Random
 fun JigsawLoader(
     modifier: Modifier = Modifier,
     progressState: ProgressState = Indeterminate(),
-    horizontalPieces: Int = JigsawLoaderDefaults.horizontalPieces,
-    verticalPieces: Int = JigsawLoaderDefaults.verticalPieces,
+    horizontalPieces: Int = JigsawLoaderDefaults.HORIZONTAL_PIECES,
+    verticalPieces: Int = JigsawLoaderDefaults.VERTICAL_PIECES,
     puzzleBrushProvider: BrushProvider =
         ColorBrushProvider(JigsawLoaderDefaults.color),
     lightBrush: Brush = SolidColor(Color.White.copy(alpha = .4f)),
@@ -638,8 +638,15 @@ object JigsawLoaderDefaults {
         @Composable
         get() = ColorBrushProvider(color)
 
-    val horizontalPieces: Int = 12
-    val verticalPieces: Int = 4
+    const val HORIZONTAL_PIECES: Int = 12
+
+    @Deprecated("Use HORIZONTAL_PIECES instead.")
+    val horizontalPieces = HORIZONTAL_PIECES
+
+    const val VERTICAL_PIECES: Int = 4
+
+    @Deprecated("Use VERTICAL_PIECES instead.")
+    val verticalPieces = VERTICAL_PIECES
 
     val knobInversionEvaluator: (placeX: Int, placeY: Int) -> Boolean = { x, y ->
         Random(x + y * 46340).nextBoolean()
@@ -658,14 +665,17 @@ object JigsawLoaderDefaults {
         knobEndDistanceRatio = .16f
     )
 
-    val indeterminatePiecePresenceThreshold = .15f
+    const val INDETERMINATE_PIECE_PRESENCE_THRESHOLD = .15f
+
+    @Deprecated("Use INDETERMINATE_PIECE_PRESENCE_THRESHOLD instead.")
+    val indeterminatePiecePresenceThreshold = INDETERMINATE_PIECE_PRESENCE_THRESHOLD
 
     fun piecePresenceResolver(
         progressState: ProgressState,
         horizontalPieces: Int,
         verticalPieces: Int
     ): PiecePresenceResolver = if (progressState is Indeterminate) {
-        IndeterminatePiecePresenceResolver(indeterminatePiecePresenceThreshold)
+        IndeterminatePiecePresenceResolver(INDETERMINATE_PIECE_PRESENCE_THRESHOLD)
     } else {
         ProgressPiecePresenceResolver(
             progressState = progressState,
