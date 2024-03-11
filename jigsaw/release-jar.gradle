@@ -59,7 +59,7 @@ project.afterEvaluate {
                         }
                     }
                     withXml {
-                        def dependenciesNode = asNode(null).appendNode('dependencies')
+                        def dependenciesNode = asNode().appendNode('dependencies')
                         def dependencyNode = dependenciesNode.appendNode('dependency')
                         dependencyNode.appendNode('groupId', "com.mitteloupe.loaders")
                         dependencyNode.appendNode('artifactId', "loaders-trigonometry")
