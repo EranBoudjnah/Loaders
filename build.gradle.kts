@@ -3,7 +3,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     val androidVersion = "8.3.1"
-    val kotlinAndroidVersion = "1.9.22"
+    val kotlinAndroidVersion = "1.9.23"
     id("com.android.application") version androidVersion apply false
     id("org.jetbrains.kotlin.android") version kotlinAndroidVersion apply false
     id("com.android.library") version androidVersion apply false
