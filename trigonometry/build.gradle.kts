@@ -27,7 +27,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation("junit:junit:4.13.2")
-                implementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+                implementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
                 implementation("org.mockito:mockito-inline:5.2.0")
             }
         }
