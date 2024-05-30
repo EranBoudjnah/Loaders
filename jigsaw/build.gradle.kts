@@ -1,7 +1,8 @@
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
@@ -10,35 +11,33 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("com.mitteloupe.loaders:loaders-trigonometry:0.1.0")
-                implementation(
-                    project.dependencies.platform("androidx.compose:compose-bom:2024.05.00")
-                )
-                implementation("androidx.compose.ui:ui")
-                implementation("androidx.compose.ui:ui-graphics")
-                implementation("androidx.compose.ui:ui-tooling-preview")
-                implementation("androidx.compose.material3:material3")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+                implementation(libs.loaders.trigonometry)
+                implementation(project.dependencies.platform(libs.compose.bom))
+                implementation(libs.ui)
+                implementation(libs.ui.graphics)
+                implementation(libs.androidx.ui.tooling.preview)
+                implementation(libs.androidx.material3)
+                implementation(libs.kotlinx.datetime)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation("junit:junit:4.13.2")
-                implementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
-                implementation("org.mockito:mockito-inline:5.2.0")
+                implementation(libs.junit)
+                implementation(libs.mockito.kotlin)
+                implementation(libs.mockito.inline)
             }
         }
     }
 }
 
 dependencies {
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 }
 
 android {
