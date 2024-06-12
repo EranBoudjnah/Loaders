@@ -2,7 +2,7 @@
 kotlin = "2.0.0"
 android = "8.4.2"
 activityCompose = "1.9.0"
-composeBom = "2024.05.00"
+composeBom = "2024.06.00"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
