@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.10"
-android = "8.5.1"
+android = "8.5.2"
 activityCompose = "1.9.1"
 composeBom = "2024.06.00"
 coreKtx = "1.13.1"
