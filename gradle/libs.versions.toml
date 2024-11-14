@@ -14,7 +14,7 @@ loadersJigsaw = "0.2.0"
 loadersTrigonometry = "0.1.0"
 mockitoKotlin = "5.4.0"
 mockitoInline = "5.2.0"
-navigationCompose = "2.8.3"
+navigationCompose = "2.8.4"
 ktlint = "12.1.1"
 gradleNexusPublish = "2.0.0"
 
