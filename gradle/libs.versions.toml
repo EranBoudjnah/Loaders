@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 android = "8.7.3"
 activityCompose = "1.9.3"
 composeBom = "2024.11.00"
