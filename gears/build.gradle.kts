@@ -6,6 +6,7 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(JavaVersion.VERSION_17.majorVersion.toInt())
     androidTarget()
 
     sourceSets {
