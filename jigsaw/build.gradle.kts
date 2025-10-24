@@ -34,18 +34,14 @@ kotlin {
 dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 }
 
 android {
     namespace = "com.mitteloupe.loader.jigsaw"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -70,6 +66,7 @@ android {
         compose = true
     }
 
+    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }

@@ -27,7 +27,10 @@ sealed interface BrushProvider {
     }
 
     data class ImageResourceBrushProvider(
-        @DrawableRes private val resourceId: Int
+        @param:DrawableRes
+        @field:DrawableRes
+        @get:DrawableRes
+        private val resourceId: Int
     ) : BrushProvider {
         @Composable
         override fun invoke(targetComposableSize: IntSize): Brush {

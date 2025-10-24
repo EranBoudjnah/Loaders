@@ -8,7 +8,7 @@ plugins {
 kotlin {
     androidTarget {
         withSourcesJar()
-        publishAllLibraryVariants()
+        publishLibraryVariants = listOf("release")
     }
 
     sourceSets {
@@ -17,10 +17,10 @@ kotlin {
                 implementation(
                     project.dependencies.platform(libs.compose.bom)
                 )
-                implementation(libs.androidx.compose.ui.ui2)
-                implementation(libs.androidx.compose.ui.ui.graphics2)
-                implementation(libs.androidx.compose.ui.ui.tooling.preview2)
-                implementation(libs.androidx.compose.material3.material32)
+                implementation(libs.androidx.compose.ui.ui)
+                implementation(libs.androidx.compose.ui.ui.graphics)
+                implementation(libs.androidx.compose.ui.ui.tooling.preview)
+                implementation(libs.androidx.compose.material3.material3)
                 implementation(libs.kotlinx.datetime)
             }
         }
@@ -36,20 +36,16 @@ kotlin {
 }
 
 dependencies {
-    debugImplementation(libs.androidx.compose.ui.ui.tooling2)
-    debugImplementation(libs.androidx.compose.ui.ui.test.manifest2)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.ui.test.junit42)
+    debugImplementation(libs.androidx.compose.ui.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.ui.test.manifest)
 }
 
 android {
     namespace = "com.mitteloupe.loader.trigonometry"
-    compileSdk = 34
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -74,6 +70,7 @@ android {
         compose = true
     }
 
+    @Suppress("UnstableApiUsage")
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }
