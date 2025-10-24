@@ -11,7 +11,7 @@ A collection of progress indicators/loaders for Jetpack Compose
 
 Download
 --------
-Update the project build.gradle. You can include one or more of the loaders:
+Update the project `build.gradle`. You can include one or more of the loaders:
 
 ```gradle
 dependencies {
@@ -20,7 +20,7 @@ dependencies {
 }
 ```
 
-This project is hosted in mavenCentral().
+This project is hosted on `mavenCentral()`.
 
 ### Usage
 
