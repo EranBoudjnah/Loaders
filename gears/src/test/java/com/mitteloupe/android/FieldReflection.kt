@@ -26,7 +26,7 @@ object FieldReflection {
             do {
                 try {
                     reflectedField = classForReflection?.getDeclaredField(fieldNameValueToFetch)
-                } catch (exception: NoSuchFieldException) {
+                } catch (_: NoSuchFieldException) {
                     classForReflection = classForReflection?.superclass
                 }
             } while (reflectedField == null || classForReflection == null)
