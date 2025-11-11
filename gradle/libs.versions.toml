@@ -16,7 +16,7 @@ loadersTrigonometry = "0.1.0"
 mockitoKotlin = "6.1.0"
 mockitoInline = "5.2.0"
 navigationCompose = "2.9.6"
-ktlint = "13.1.0"
+ktlint = "14.0.1"
 gradleNexusPublish = "2.0.0"
 
 [libraries]
