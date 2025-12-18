@@ -77,11 +77,9 @@ ext {
     set("PUBLISH_VERSION", "0.2.0")
 }
 
-val sourcesJar by tasks.registering(Jar::class) {
+val loadersSourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(android.sourceSets.getByName("main").java.srcDirs)
 }
 
-apply {
-    from("release-jar.gradle")
-}
+apply(from = "release-jar.gradle")
