@@ -34,7 +34,7 @@ project.afterEvaluate {
                 tasks.getByName("bundleReleaseAar").outputs.files.forEach {
                     artifact(it)
                 }
-                artifact(sourcesJar)
+                artifact(loadersSourcesJar)
 
                 pom {
                     name = project.PUBLISH_ARTIFACT_ID
@@ -68,7 +68,7 @@ project.afterEvaluate {
     }
 
     publishMavenPublicationToMavenLocal
-            .dependsOn(sourcesJar)
+            .dependsOn(loadersSourcesJar)
             .dependsOn(bundleReleaseAar)
 }
 
