@@ -31,14 +31,12 @@ project.afterEvaluate {
                 groupId = project.PUBLISH_GROUP_ID
                 artifactId = project.PUBLISH_ARTIFACT_ID
                 version = pomVersion
-                tasks.getByName("bundleReleaseAar").outputs.files.forEach {
-                    artifact(it)
-                }
-                artifact(loadersSourcesJar)
+
+                from components.findByName('android')
 
                 pom {
                     name = project.PUBLISH_ARTIFACT_ID
-                    description = 'Loaders Trigonometry.'
+                    description = project.PUBLISH_ARTIFACT_ID
                     url = gitUrl
                     licenses {
                         license {
@@ -66,14 +64,10 @@ project.afterEvaluate {
     signing {
         sign publishing.publications.maven
     }
-
-    publishMavenPublicationToMavenLocal
-            .dependsOn(loadersSourcesJar)
-            .dependsOn(bundleReleaseAar)
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-    if (!taskGraph.hasTask(publishMavenPublicationToSonatypeRepository)) {
+    if (!taskGraph.allTasks.any { it.name.contains("publishMavenPublicationToSonatypeStagingRepository") }) {
         signMavenPublication.enabled = false
     }
 }
