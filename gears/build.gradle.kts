@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+group = "com.mitteloupe.loaders"
+version = libs.versions.loadersGears.get()
+
 kotlin {
     androidLibrary {
         namespace = "com.mitteloupe.loader.gears"
@@ -17,9 +20,8 @@ kotlin {
     jvmToolchain(JavaVersion.VERSION_17.majorVersion.toInt())
 
     sourceSets {
-        val androidMain by getting
-
         val commonMain by getting {
+            kotlin.srcDir("src/main/java")
             dependencies {
                 api(libs.loaders.trigonometry)
                 implementation(project.dependencies.platform(libs.compose.bom))
@@ -32,6 +34,7 @@ kotlin {
         }
 
         val commonTest by getting {
+            kotlin.srcDir("src/test/java")
             dependencies {
                 implementation(libs.junit)
                 implementation(libs.mockito.kotlin)
@@ -48,9 +51,4 @@ dependencies {
 
 description = "Gears Loader."
 
-ext {
-    set("PUBLISH_ARTIFACT_ID", "loaders-gears")
-    set("PUBLISH_VERSION", libs.versions.loadersGears.get())
-}
-
-apply(from = "release-jar.gradle")
+apply(from = "../gradle/publish-module.gradle.kts")

@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+group = "com.mitteloupe.loaders"
+version = libs.versions.loadersTrigonometry.get()
+
 kotlin {
     androidLibrary {
         namespace = "com.mitteloupe.loader.trigonometry"
@@ -16,6 +19,7 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
+            kotlin.srcDir("src/main/java")
             dependencies {
                 implementation(project.dependencies.platform(libs.compose.bom))
                 implementation(libs.androidx.compose.ui.ui)
@@ -43,9 +47,4 @@ dependencies {
 
 description = "Loaders Trigonometry."
 
-ext {
-    set("PUBLISH_ARTIFACT_ID", "loaders-trigonometry")
-    set("PUBLISH_VERSION", libs.versions.loadersTrigonometry.get())
-}
-
-apply(from = "release-jar.gradle")
+apply(from = "../gradle/publish-module.gradle.kts")
