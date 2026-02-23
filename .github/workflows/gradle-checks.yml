@@ -33,7 +33,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Assemble with Gradle
-        run: ./gradlew :app:preDebugBuild :app:preReleaseBuild :gears:preDebugBuild :gears:preReleaseBuild --no-daemon
+        run: ./gradlew :app:preDebugBuild :app:preReleaseBuild :gears:assembleAndroidDebug :gears:assembleAndroidRelease --no-daemon
 
   unit-tests:
     needs: setup
