@@ -21,7 +21,11 @@ configure<PublishingExtension> {
     }
 
     publications.withType<MavenPublication> {
-        artifactId = "loaders-${project.name}"
+        artifactId = if (name == "kotlinMultiplatform" || !project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
+            "loaders-${project.name}"
+        } else {
+            "loaders-${project.name}-$name"
+        }
 
         pom {
             name.set("loaders-${project.name}")
