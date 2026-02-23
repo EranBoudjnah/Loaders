@@ -5,11 +5,21 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+group = "com.mitteloupe.loaders"
+version = libs.versions.loadersJigsaw.get()
+
 kotlin {
-    androidTarget()
+    androidLibrary {
+        namespace = "com.mitteloupe.loader.jigsaw"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+
+        withSourcesJar()
+    }
 
     sourceSets {
         val commonMain by getting {
+            kotlin.srcDir("src/main/java")
             dependencies {
                 implementation(libs.loaders.trigonometry)
                 implementation(project.dependencies.platform(libs.compose.bom))
@@ -22,6 +32,7 @@ kotlin {
         }
 
         val commonTest by getting {
+            kotlin.srcDir("src/test/java")
             dependencies {
                 implementation(libs.junit)
                 implementation(libs.mockito.kotlin)
@@ -32,54 +43,10 @@ kotlin {
 }
 
 dependencies {
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    "androidRuntimeClasspath"(libs.ui.tooling)
+    "androidRuntimeClasspath"(libs.ui.test.manifest)
 }
 
-android {
-    namespace = "com.mitteloupe.loader.jigsaw"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+description = "Jigsaw Loader."
 
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        compose = true
-    }
-
-    @Suppress("UnstableApiUsage")
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-}
-
-ext {
-    set("PUBLISH_ARTIFACT_ID", "loaders-jigsaw")
-    set("PUBLISH_VERSION", "0.2.0")
-}
-
-val loadersSourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(android.sourceSets.getByName("main").java.srcDirs)
-}
-
-apply(from = "release-jar.gradle")
+apply(from = "../gradle/publish-module.gradle.kts")
